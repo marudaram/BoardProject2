@@ -1,6 +1,26 @@
 <template>
   <v-app class="wrapBox">
-    <v-toolbar-title>게시판 리스트</v-toolbar-title>
+    <v-btn elevation="2" small class="writeBtn">글쓰기</v-btn>
+    <v-toolbar-title style="fontSize:40px; marginBottom:15px"
+      >Board List</v-toolbar-title
+    >
+
+    <div class="searchArea">
+      <v-toolbar style="height:50px">
+        <input type="text" class="inputBox" />
+
+        <v-btn icon class="hidden-xs-only">
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+      </v-toolbar>
+    </div>
+
+    <select class="selectBox">
+      <option>본문</option>
+      <option>제목</option>
+      <option>작성자</option>
+    </select>
+
     <v-data-table
       :headers="headers"
       :items="contents"
@@ -90,7 +110,38 @@ export default {
 </script>
 
 <style scoped>
+.header {
+  height: 20px;
+}
 .wrapBox {
   margin-top: 100px;
+  position: relative;
+}
+
+.writeBtn {
+  width: 70px;
+  position: absolute;
+  top: -1%;
+  left: 60%;
+}
+
+.searchArea {
+  width: 300px;
+  position: absolute;
+  top: -3%;
+  left: 68%;
+}
+
+.inputBox {
+  font-size: 15px;
+  width: 250px;
+}
+
+.selectBox {
+  border: 1px solid lightgray;
+  position: absolute;
+  top: -1%;
+  left: 95%;
+  text-align: center;
 }
 </style>
