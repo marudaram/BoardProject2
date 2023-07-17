@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Entity
 @Table(name = "file")
-public class file {
+public class File {
 
     @Id
     private String fileUuid;

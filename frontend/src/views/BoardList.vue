@@ -1,33 +1,57 @@
 <template>
-  <v-app class="wrapBox">
-    <v-btn elevation="2" small class="writeBtn">글쓰기</v-btn>
-    <v-toolbar-title style="fontSize:40px; marginBottom:15px"
-      >Board List</v-toolbar-title
-    >
+  <v-container>
+    <v-col>
+      <v-simple-table>
+        <thead>
+          <tr>
+            <th class="text-left no">
+              No
+            </th>
+            <th class="text-left subject">
+              제목
+            </th>
+            <th class="text-left">
+              작성자
+            </th>
+            <th class="text-left">
+              날짜
+            </th>
+            <th class="text-left">
+              조회수
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(row, idx) in listData"
+            :key="idx"
+            @click="detail(row.boardNum)"
+          >
+            <td>{{ row.boardNum }}</td>
+            <td>{{ row.title }}</td>
+            <td>{{ row.writer }}</td>
+            <td>{{ row.regDate }}</td>
+            <td>{{ row.hit }}</td>
+          </tr>
+        </tbody>
+      </v-simple-table>
+    </v-col>
+    <v-col>
+      <v-btn variant="tonal">
+        목록으로
+      </v-btn>
+      <v-btn variant="tonal" @click="toBoardWrite">
+        글 등록
+      </v-btn>
 
-    <div class="searchArea">
-      <v-toolbar style="height:50px">
-        <input type="text" class="inputBox" />
-
-        <v-btn icon class="hidden-xs-only">
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-      </v-toolbar>
-    </div>
-
-    <select class="selectBox">
-      <option>본문</option>
-      <option>제목</option>
-      <option>작성자</option>
-    </select>
-
-    <v-data-table
-      :headers="headers"
-      :items="contents"
-      :items-per-page="5"
-      class="elevation-1"
-    ></v-data-table>
-  </v-app>
+      <v-pagination
+        v-model="page"
+        :length="10"
+        circle
+        @input="routePage({ page: page }), getBoardList()"
+      ></v-pagination>
+    </v-col>
+  </v-container>
 </template>
 
 <script>
@@ -35,76 +59,90 @@ export default {
   name: "VuetifyTable",
   data() {
     return {
-      headers: [
-        {
-          align: "start",
-          sortable: false,
-          value: "name"
-        },
-        { text: "No", value: "mon" },
-        { text: "제목", value: "tue" },
-        { text: "작성자", value: "wed" },
-        { text: "날짜", value: "tur" },
-        { text: "조회수", value: "fri" }
-      ],
-      contents: [
-        {
-          name: "1조",
-          mon: "94.7%",
-          tue: "-",
-          wed: "-",
-          tur: "-",
-          fri: "-",
-          sat: "-",
-          sun: "-",
-          percent: "94.7%"
-        },
-        {
-          name: "2조",
-          mon: "-",
-          tue: "92.3%",
-          wed: "-",
-          tur: "-",
-          fri: "-",
-          sat: "-",
-          sun: "-",
-          percent: "92.3%"
-        },
-        {
-          name: "3조",
-          mon: "91.9%",
-          tue: "90.3%",
-          wed: "-",
-          tur: "-",
-          fri: "-",
-          sat: "-",
-          sun: "-",
-          percent: "91.1%"
-        },
-        {
-          name: "4조",
-          mon: "100.0%",
-          tue: "96.4%",
-          wed: "-",
-          tur: "-",
-          fri: "-",
-          sat: "-",
-          sun: "-",
-          percent: "98.4%"
-        },
-        {
-          name: "평균",
-          mon: "95.9%",
-          tue: "92.8%",
-          wed: "-",
-          tur: "-",
-          fri: "-",
-          sat: "-",
-          sun: "-",
-          percent: "94.3%"
-        }
-      ]
+      listData: {
+        title: "",
+        content: "",
+        regDate: "",
+        hit: 0
+      },
+
+      //페이지 이동에 필요한 초기값
+      page: 1,
+      amount: 10,
+      totalElements: 0,
+      totalPages: 0
     };
+  },
+  computed: {
+    param() {
+      return this.$route.params.criteriaObj;
+    }
+  },
+  watch: {
+    param(criteriaObj) {
+      const { page, amount } = JSON.parse(criteriaObj);
+      this.page = page;
+      this.amount = amount;
+      this.getBoardList();
+    }
+  },
+  mounted() {
+    if (this.$route.name == "listParam") {
+      const param = this.$route.params.criteriaObj;
+      const { page, amount } = JSON.parse(param);
+      this.page = page;
+      this.amount = amount;
+    }
+    this.getBoardList();
+  },
+  methods: {
+    toBoardWrite() {
+      this.$router.push({ path: "/boardWrite" });
+    },
+    getBoardList() {
+      this.$axios
+        .get("/board/list", {
+          params: {
+            page: this.page > 0 ? this.page - 1 : this.page,
+            amount: this.amount
+          }
+        })
+        .then(res => {
+          const { status, data } = res;
+          if (status !== 200) alert("에러가 발생했습니다!");
+          const {
+            content: list,
+            number: page,
+            totalElements,
+            size: amount,
+            totalPages
+          } = data;
+          this.listData = list;
+          this.page = page + 1;
+          this.amount = amount;
+          this.totalElements = totalElements;
+          this.totalPages = totalPages;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    detail(idx) {
+      this.$router.push({
+        name: "boardDetail",
+        params: {
+          boardNum: idx
+        }
+      });
+    },
+    routePage({ page = 1, amount = this.amount }) {
+      this.$router.push({
+        name: "listParam",
+        params: {
+          criteriaObj: JSON.stringify({ page, amount })
+        }
+      });
+    }
   }
 };
 </script>
@@ -118,30 +156,34 @@ export default {
   position: relative;
 }
 
-.writeBtn {
+.wrapBox2 .writeBtn {
   width: 70px;
-  position: absolute;
-  top: -1%;
-  left: 60%;
+  float: right;
+  margin-top: 10px;
+  margin-right: 15px;
 }
 
-.searchArea {
-  width: 300px;
-  position: absolute;
-  top: -3%;
-  left: 68%;
+.wrapBox2 .searchArea {
+  width: 250px;
+  height: 90px;
+  float: right;
+  margin-right: 15px;
 }
 
-.inputBox {
+.wrapBox2 .inputBox {
   font-size: 15px;
   width: 250px;
+  float: right;
 }
 
 .selectBox {
   border: 1px solid lightgray;
-  position: absolute;
-  top: -1%;
-  left: 95%;
+  float: right;
   text-align: center;
+  margin-top: 10px;
+}
+
+.v-simple-table {
+  min-width: 50px !important;
 }
 </style>

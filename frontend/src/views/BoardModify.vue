@@ -5,7 +5,7 @@
         type="text"
         placeholder="제목"
         class="titleArea"
-        v-model="boardDetailData.title"
+        v-model="boardChangeData.title"
       />
 
       <div class="example">
@@ -20,16 +20,16 @@
           @blur="onEditorBlur($event)"
           @focus="onEditorFocus($event)"
           @ready="onEditorReady($event)"
-          v-model="boardDetailData.content"
+          v-model="boardChangeData.content"
         />
         <div class="output ql-snow"></div>
       </div>
     </v-col>
 
     <v-col>
-      <v-btn variant="tonal" @click="toBoardList"> 목록으로 </v-btn>&nbsp;
-      <v-btn variant="tonal" @click="onSubmit">
-        글 등록
+      <v-btn variant="tonal"> 목록으로 </v-btn>&nbsp;
+      <v-btn variant="tonal" @click="modifyBoard">
+        수정
       </v-btn>
     </v-col>
   </v-container>
@@ -82,12 +82,28 @@ export default {
           }
         }
       },
-      boardDetailData: {
+      boardChangeData: {
+        boardNum: "",
         title: "",
-        content: ""
+        content: "",
+        writer: "",
+        regDate: "",
+        hit: ""
       },
       content: ""
     };
+  },
+  created() {
+    const boardNum = this.$route.params.boardNum;
+    this.$axios
+      .get(`board/detail/${boardNum}`)
+      .then(res => {
+        this.boardChangeData = res.data;
+        console.log(res.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   },
   methods: {
     onEditorChange: debounce(function(value) {
@@ -102,50 +118,32 @@ export default {
     onEditorReady(editor) {
       console.log("editor ready!", editor);
     },
-    onSubmit() {
-      let self = this;
+    modifyBoard() {
       this.$axios
-        .post("/board/save", {
-          title: this.boardDetailData.title,
-          content: this.boardDetailData.content
+        .put(`board/detail/${this.boardChangeData.boardNum}`, {
+          title: this.boardChangeData.title,
+          content: this.boardChangeData.content,
+          writer: this.boardChangeData.writer
         })
         .then(res => {
-          if (res.status === 200) {
-            self.$router.push({ path: "/boardList" });
+          this.boardChangeData = res.data;
+          console.log(res.data);
+          this.$router.push({
+            name: `boardDetail`,
+            params: {
+              boardNum: this.$route.params.boardNum
+            }
+          });
+          if (
+            this.$route.path !== `/boardDetail/${this.$route.params.boardNum}`
+          ) {
+            this.$router.push(`/boardDetail/${this.$route.params.boardNum}`);
           }
-        })
-        .catch(error => {
-          console.log(error);
         });
     },
     toBoardList() {
-      this.$router.push({ path: "/boardList" });
+      this.$router.push({ path: `/boardList` });
     }
-  },
-  computed: {
-    editor() {
-      return this.$refs.myTextEditor.quill;
-    },
-    contentCode() {
-      return hljs.highlightAuto(this.content).value;
-    }
-  },
-  mounted() {
-    console.log("this is Quill instance:", this.editor);
   }
 };
 </script>
-
-<style scoped>
-.titleArea {
-  border: 2px solid lightgrey;
-  height: 40px;
-  font-size: 20px;
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-button {
-  margin-top: 100px;
-}
-</style>

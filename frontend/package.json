@@ -10,11 +10,13 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^38.1.1",
     "@ckeditor/ckeditor5-vue": "^5.1.0",
+    "axios": "^1.4.0",
     "core-js": "^3.8.3",
     "tiptap": "^1.32.2",
     "tiptap-extensions": "^1.35.2",
     "vue": "^2.6.14",
     "vue-quill-editor": "^3.0.6",
+    "vue-resource": "^1.5.3",
     "vue-router": "^3.2.0",
     "vuetify": "^2.6.0",
     "vuex": "^3.4.0"

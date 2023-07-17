@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
-public class user {
+public class User {
 
     @Id
     @Column(length = 30, nullable = false)

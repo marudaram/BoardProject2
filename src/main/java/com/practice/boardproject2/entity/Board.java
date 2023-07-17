@@ -16,13 +16,13 @@ import java.util.Date;
 @Entity
 @DynamicInsert
 @Table(name = "board")
-public class board {
+public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer boardNum; // pk -> auto_increment
 
-    @Column(length = 30, nullable = false)
+    @Column(length = 30)
     private String writer;
 
     @Column(length = 210)
@@ -37,5 +37,12 @@ public class board {
 
     @Column(columnDefinition = "int default 0")
     private Integer hit;
+
+    public void changeBoard(String title, String content) {
+        this.title = title;
+        this.content = content;
+        this.regDate = new Date();
+    }
+
 
 }

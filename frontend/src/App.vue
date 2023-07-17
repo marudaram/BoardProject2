@@ -28,13 +28,14 @@
 </template>
 
 <script setup>
-const links = ["Dashboard", "Messages", "Profile", "Updates"];
+const links = ["Board List", "My Page", "Writing", "Logout"];
 </script>
 
 <script>
 export default {
   data: () => ({
-    links: ["Dashboard", "Messages", "Profile", "Updates"]
-  })
+    links: ["Board List", "My Page", "Writing", "Logout"]
+  }),
+  methods: {}
 };
 </script>
