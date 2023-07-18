@@ -1,13 +1,17 @@
 package com.practice.boardproject2.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -32,7 +36,8 @@ public class Board {
 //    @Column(columnDefinition = "TEXT") //type을 text로 바꿔준다
     private String content;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    @CreationTimestamp
     private Date regDate;
 
     @Column(columnDefinition = "int default 0")
@@ -43,6 +48,11 @@ public class Board {
         this.content = content;
         this.regDate = new Date();
     }
+
+    //댓글이랑 join
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "boardNum")
+    private List<Comment> commentList = new ArrayList<>();
 
 
 }

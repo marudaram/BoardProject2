@@ -13,6 +13,10 @@ module.exports = defineConfig({
         target: "http://localhost:8081", // Spring Boot Server
         changeOrigin: true,
       },
+      "/comment": {
+        target: "http://localhost:8081", // Spring Boot Server
+        changeOrigin: true,
+      },
     },
   },
 });

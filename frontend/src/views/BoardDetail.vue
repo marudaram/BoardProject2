@@ -45,6 +45,45 @@
         수정
       </v-btn>
     </div>
+    <div>
+      <v-row cols="auto" sm="12">
+        <div class="commentMiniBox">
+          <p class="commentTitle">댓글</p>
+        </div>
+        <v-textarea
+          filled
+          auto-grow
+          label="댓글 작성"
+          rows="4"
+          row-height="30"
+          v-model="commentDetailData.comContent"
+        ></v-textarea>
+        <v-btn variant="tonal" @click="comSubmit" style="marginTop:100px">
+          작성
+        </v-btn>
+      </v-row>
+
+      <v-row
+        cols="auto"
+        sm="12"
+        v-for="(row, index) in commentDetailData"
+        :key="index"
+      >
+        <div class="commentMiniBox">
+          <p class="commentTitle">{{ row.comWriter }}</p>
+        </div>
+        <div
+          class="writtenComment"
+          filled
+          auto-grow
+          label="댓글 작성"
+          rows="4"
+          row-height="30"
+          v-html="row.comContent"
+          disabled
+        ></div>
+      </v-row>
+    </div>
   </div>
 </template>
 
@@ -59,6 +98,13 @@ export default {
         id: JSON.parse(sessionStorage.getItem("sessionId")),
         regDate: "",
         hit: ""
+      },
+      commentDetailData: {
+        id: "",
+        comWriter: "",
+        comContent: "",
+        regDate: "",
+        boardNum: ""
       }
     };
   },
@@ -71,6 +117,16 @@ export default {
         const { status, data } = res;
         if (status !== 200) alert("에러가 발생했습니다.");
         this.boardDetailData = data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    this.$axios
+      .get(`/comment/comList/${boardNum}`)
+      .then(res => {
+        this.commentDetailData = res.data;
+        console.log(res.data);
       })
       .catch(error => {
         console.log(error);
@@ -102,6 +158,25 @@ export default {
             console.log(error);
           });
       }
+    },
+    comSubmit() {
+      let self = this;
+      this.$axios
+        .post("/comment/comSave", {
+          comWriter: JSON.parse(sessionStorage.getItem("sessionId")),
+          comContent: this.commentDetailData.comContent,
+          id: this.boardDetailData.id,
+          boardNum: this.boardDetailData.boardNum
+        })
+        .then(res => {
+          const id = this.boardDetailData.id;
+          if (res.status === 200) {
+            self.$router.push({ path: `/boardDetail/${id}` });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };
@@ -126,5 +201,25 @@ button {
   float: right;
   margin-right: 30px;
   margin-top: 10px;
+}
+
+.commentMiniBox {
+  background-color: lightgray;
+  height: 145px;
+  width: 190px;
+  float: left;
+  border: 1px solid gray;
+}
+
+.commentMiniBox .commentTitle {
+  text-align: center;
+  margin-top: 30%;
+}
+
+.writtenComment {
+  border: 1px solid lightgray;
+  width: 78%;
+  padding-top: 10px;
+  padding-left: 10px;
 }
 </style>
