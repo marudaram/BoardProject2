@@ -74,21 +74,28 @@ public class BoardService {
 
     //내가 쓴 게시글 가져오기
     @Transactional
-    public List<BoardResponseDTO> getMyBoardList(String id) {
-        List<Board> boardList = boardRepository.findById(id);
-        List<BoardResponseDTO> myBoardList = new ArrayList<>();
-        for(Board board : boardList) {
-            BoardResponseDTO boardResponseDTO = BoardResponseDTO.builder()
-                    .boardNum(board.getBoardNum())
-                    .id(board.getId())
-                    .title(board.getTitle())
-                    .content(board.getContent())
-                    .regDate(board.getRegDate())
-                    .hit(board.getHit())
-                    .build();
-            myBoardList.add(boardResponseDTO);
-        }
-        return myBoardList;
+    public Page<BoardResponseDTO> getMyBoardList(Criteria cri) {
+
+        PageRequest pageRequest = PageRequest.of(cri.getPage(), cri.getAmount(), Sort.by("boardNum").descending());
+        Page<Board> boardPage = boardRepository.findById(pageRequest);
+        List<BoardResponseDTO> myDtoList = boardPage.stream().map(this::toDto).collect(Collectors.toList());
+        return new PageImpl<>(myDtoList, boardPage.getPageable(), boardPage.getTotalElements());
+
+
+//        List<Board> boardList = boardRepository.findById(id);
+//        List<BoardResponseDTO> myBoardList = new ArrayList<>();
+//        for(Board board : boardList) {
+//            BoardResponseDTO boardResponseDTO = BoardResponseDTO.builder()
+//                    .boardNum(board.getBoardNum())
+//                    .id(board.getId())
+//                    .title(board.getTitle())
+//                    .content(board.getContent())
+//                    .regDate(board.getRegDate())
+//                    .hit(board.getHit())
+//                    .build();
+//            myBoardList.add(boardResponseDTO);
+//        }
+//        return myBoardList;
     }
 
 

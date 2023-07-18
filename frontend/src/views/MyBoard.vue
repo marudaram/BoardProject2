@@ -4,6 +4,7 @@
       <v-simple-table style="marginTop:30px">
         <thead>
           <tr>
+            <th><input type="checkbox" /></th>
             <th class="text-left no">
               No
             </th>
@@ -45,12 +46,12 @@
         글 등록
       </v-btn>
 
-      <!-- <v-pagination
+      <v-pagination
         v-model="page"
         :length="10"
         circle
         @input="routePage({ page: page }), getBoardList()"
-      ></v-pagination> -->
+      ></v-pagination>
     </v-col>
   </v-container>
 </template>
@@ -65,7 +66,12 @@ export default {
         content: "",
         regDate: "",
         hit: 0
-      }
+      },
+      //페이지 이동에 필요한 초기값
+      page: 1,
+      amount: 10,
+      totalElements: 0,
+      totalPages: 0
     };
   },
   beforeCreate() {
@@ -80,12 +86,57 @@ export default {
         console.log(error);
       });
   },
+  computed: {
+    param() {
+      return this.$route.params.myCriteriaObj;
+    }
+  },
+  watch: {
+    param(myCriteriaObj) {
+      const { page, amount } = JSON.parse(myCriteriaObj);
+      this.page = page;
+      this.amount = amount;
+      this.getMyBoardList();
+    }
+  },
+  mounted() {
+    if (this.$route.name == "myListParam") {
+      const param = this.$route.params.myCriteriaObj;
+      const { page, amount } = JSON.parse(param);
+      this.page = page;
+      this.amount = amount;
+    }
+  },
   methods: {
     detail(idx) {
       this.$router.push({
         name: "boardDetail",
         params: {
           boardNum: idx
+        }
+      });
+    },
+    getMyBoardList() {
+      const id = JSON.parse(sessionStorage.getItem("sessionId"));
+      this.$axios
+        .get(`/board/myBoard/${id}`)
+        .then(res => {
+          this.myListData = res.data;
+          console.log(res.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    routePage({
+      id = JSON.parse(sessionStorage.getItem("sessionId")),
+      page = 1,
+      amount = this.amount
+    }) {
+      this.$router.push({
+        name: `myListParam`,
+        params: {
+          myCriteriaObj: JSON.stringify({ id, page, amount })
         }
       });
     }

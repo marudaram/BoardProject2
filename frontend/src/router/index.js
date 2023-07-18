@@ -6,6 +6,7 @@ import BoardModify from "@/views/BoardModify.vue";
 import MyBoard from "@/views/MyBoard.vue";
 import Vue from "vue";
 import VueRouter from "vue-router";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -51,7 +52,15 @@ const routes = [
     //내가 쓴 게시글 보기
     path: "/myBoard/:id",
     name: "myBoard",
-    component: MyBoard
+    component: MyBoard,
+    children: [
+      {
+        //내가 쓴 게시글
+        path: "/myBoard/:myCriteriaObj",
+        name: "myListParam",
+        component: MyBoard
+      }
+    ]
   }
 ];
 
@@ -59,5 +68,13 @@ const router = new VueRouter({
   routes,
   mode: "hash"
 });
+
+//같은 페이지 눌렀을 때 발생하는 NavigationDuplicated 에러를 막기 위해 전역에서 설정해준다
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(error => {
+    if (error.name !== "NavigationDuplicated") throw error;
+  });
+};
 
 export default router;

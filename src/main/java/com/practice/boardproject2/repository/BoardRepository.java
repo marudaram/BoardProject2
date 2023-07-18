@@ -19,6 +19,8 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
     @Query(value = "update Board b set b.hit=b.hit+1 where b.boardNum=:boardNum")
     void increaseHit(@Param("boardNum") Integer boardNum);
 
-    List<Board> findById(@Param("id") String id);
+    @Modifying
+    @Query(value = "select '*' from Board b where b.id=:id")
+    Page<Board> findById(Pageable pageable);
 
 }
