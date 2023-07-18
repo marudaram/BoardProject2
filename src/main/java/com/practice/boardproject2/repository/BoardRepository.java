@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.practice.boardproject2.entity.Board;
+
+import java.util.List;
+
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Integer> {
     Page<Board> findAll(Pageable pageable);
@@ -15,5 +18,7 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
     @Modifying
     @Query(value = "update Board b set b.hit=b.hit+1 where b.boardNum=:boardNum")
     void increaseHit(@Param("boardNum") Integer boardNum);
+
+    List<Board> findById(@Param("id") String id);
 
 }

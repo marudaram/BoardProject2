@@ -31,5 +31,5 @@ public class File {
     private Integer boardNum;
 
     @Column(length = 30, nullable = false)
-    private String writer;
+    private String id;
 }

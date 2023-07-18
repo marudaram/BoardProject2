@@ -9,6 +9,10 @@ module.exports = defineConfig({
         target: "http://localhost:8081", // Spring Boot Server
         changeOrigin: true,
       },
+      "/user": {
+        target: "http://localhost:8081", // Spring Boot Server
+        changeOrigin: true,
+      },
     },
   },
 });

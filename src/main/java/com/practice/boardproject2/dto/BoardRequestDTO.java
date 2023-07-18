@@ -11,7 +11,7 @@ import java.util.Date;
 @Setter
 public class BoardRequestDTO {
     private Integer boardNum;
-    private String writer;
+    private String id;
     private String title;
     private String content;
     private Date regDate;

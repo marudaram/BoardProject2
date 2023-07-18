@@ -1,57 +1,58 @@
 <template>
-  <v-app id="inspire">
-    <v-app-bar class="px-3" color="white" flat density="compact">
-      <v-avatar color="grey-darken-1" size="32"></v-avatar>
-
-      <v-spacer></v-spacer>
-
-      <v-tabs centered color="grey-darken-2">
-        <v-tab v-for="link in links" :key="link">
-          {{ link }}
-        </v-tab>
-      </v-tabs>
-      <v-spacer></v-spacer>
-      <v-avatar
-        class="hidden-sm-and-down"
-        color="grey-darken-1"
-        size="32"
-      ></v-avatar>
-    </v-app-bar>
-
-    <v-main class="bg-grey-lighten-3">
-      <v-container>
-        <v-row>
-          <v-col cols="12" sm="2">
-            <v-sheet rounded="lg" min-height="268">
-              <!--  -->
-            </v-sheet>
-          </v-col>
-
-          <v-col cols="12" sm="8">
-            <v-sheet min-height="70vh" rounded="lg">
-              <!--  -->
-            </v-sheet>
-          </v-col>
-
-          <v-col cols="12" sm="2">
-            <v-sheet rounded="lg" min-height="268">
-              <!--  -->
-            </v-sheet>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
-  </v-app>
+  <v-card class="mx-auto" max-width="344">
+    <v-card-text>
+      <p style="fontSize:20px; color:black; marginBottom:40px">LogIn</p>
+      <div>ID</div>
+      <v-text-field v-model="userInfo.id"> </v-text-field>
+      <div>Password</div>
+      <v-text-field v-model="userInfo.password"> </v-text-field>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn
+        text
+        color="deep-purple accent-4"
+        style="marginLeft:250px"
+        @click="logIn"
+      >
+        LOGIN
+      </v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
-<script setup>
-const links = ["Dashboard", "Messages", "Profile", "Updates"];
-</script>
-
 <script>
-export default {
-  data: () => ({
-    links: ["Dashboard", "Messages", "Profile", "Updates"]
-  })
-};
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  name: "SignIn",
+  data() {
+    return {
+      userInfo: {
+        id: "",
+        password: ""
+      }
+    };
+  },
+  methods: {
+    logIn() {
+      console.log("로그인버튼클릭");
+      this.$axios
+        .post(`/user/logIn`, {
+          id: this.userInfo.id,
+          password: this.userInfo.password
+        })
+        .then(res => {
+          //sessionStorage에 id 추가
+          sessionStorage.setItem(`sessionId`, JSON.stringify(this.userInfo.id));
+          this.$store.commit(`setId`, sessionStorage.getItem(`sessionId`));
+          this.$router.push(`/boardList`);
+          console.log(res);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+        .finally(() => console.log("로그인 시도"));
+    }
+  }
+});
 </script>

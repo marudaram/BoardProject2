@@ -15,6 +15,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,6 +72,25 @@ public class BoardService {
         boardRepository.deleteById(boardNum);
     }
 
+    //내가 쓴 게시글 가져오기
+    @Transactional
+    public List<BoardResponseDTO> getMyBoardList(String id) {
+        List<Board> boardList = boardRepository.findById(id);
+        List<BoardResponseDTO> myBoardList = new ArrayList<>();
+        for(Board board : boardList) {
+            BoardResponseDTO boardResponseDTO = BoardResponseDTO.builder()
+                    .boardNum(board.getBoardNum())
+                    .id(board.getId())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .regDate(board.getRegDate())
+                    .hit(board.getHit())
+                    .build();
+            myBoardList.add(boardResponseDTO);
+        }
+        return myBoardList;
+    }
+
 
     private BoardResponseDTO toDto(Board board) {
         return BoardResponseDTO.builder()
@@ -78,7 +98,7 @@ public class BoardService {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .hit(board.getHit())
-                .writer(board.getWriter())
+                .id(board.getId())
                 .regDate(board.getRegDate())
                 .build();
     }
@@ -86,7 +106,7 @@ public class BoardService {
 
     private Board toEntity(BoardRequestDTO dto) {
         return Board.builder()
-                .writer(dto.getWriter())
+                .id(dto.getId())
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .regDate(dto.getRegDate())

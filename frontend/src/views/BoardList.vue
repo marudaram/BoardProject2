@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-col>
-      <v-simple-table>
+      <v-simple-table style="marginTop:30px">
         <thead>
           <tr>
             <th class="text-left no">
@@ -29,7 +29,7 @@
           >
             <td>{{ row.boardNum }}</td>
             <td>{{ row.title }}</td>
-            <td>{{ row.writer }}</td>
+            <td>{{ row.id }}</td>
             <td>{{ row.regDate }}</td>
             <td>{{ row.hit }}</td>
           </tr>
@@ -56,7 +56,6 @@
 
 <script>
 export default {
-  name: "VuetifyTable",
   data() {
     return {
       listData: {
@@ -152,14 +151,13 @@ export default {
   height: 20px;
 }
 .wrapBox {
-  margin-top: 100px;
   position: relative;
 }
 
 .wrapBox2 .writeBtn {
   width: 70px;
   float: right;
-  margin-top: 10px;
+
   margin-right: 15px;
 }
 
@@ -181,9 +179,5 @@ export default {
   float: right;
   text-align: center;
   margin-top: 10px;
-}
-
-.v-simple-table {
-  min-width: 50px !important;
 }
 </style>

@@ -23,7 +23,7 @@ public class Board {
     private Integer boardNum; // pk -> auto_increment
 
     @Column(length = 30)
-    private String writer;
+    private String id;
 
     @Column(length = 210)
     private String title;

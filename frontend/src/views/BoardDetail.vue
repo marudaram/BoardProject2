@@ -12,7 +12,22 @@
     <div>
       <v-card>
         <v-responsive :aspect-ratio="20 / 7">
-          <v-card-text v-html="boardDetailData.content"> </v-card-text>
+          <v-input
+            error-count="3"
+            :error-messages="[
+              '날짜: ' + this.boardDetailData.regDate,
+              '조회수: ' + this.boardDetailData.hit,
+              '작성자: ' + this.boardDetailData.id
+            ]"
+            error
+            disabled
+            class="writingInfo"
+          >
+          </v-input>
+          <v-card-text
+            v-html="boardDetailData.content"
+            style="marginTop:100px;"
+          ></v-card-text>
         </v-responsive>
       </v-card>
     </div>
@@ -41,13 +56,14 @@ export default {
         boardNum: "",
         title: "",
         content: "",
-        writer: "",
+        id: JSON.parse(sessionStorage.getItem("sessionId")),
         regDate: "",
         hit: ""
       }
     };
   },
   beforeCreate() {
+    console.log(JSON.parse(sessionStorage.getItem("sessionId")));
     const boardNum = this.$route.params.boardNum;
     this.$axios
       .get(`board/detail/${boardNum}`)
@@ -104,5 +120,11 @@ button {
 
 .btnBox {
   margin-bottom: 100px;
+}
+
+.writingInfo {
+  float: right;
+  margin-right: 30px;
+  margin-top: 10px;
 }
 </style>

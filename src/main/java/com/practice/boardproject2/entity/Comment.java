@@ -24,7 +24,7 @@ public class Comment {
     private Integer boardNum;
 
     @Column(length = 30)
-    private String writer;
+    private String id;
 
     @Column(length = 30)
     private String comWriter;

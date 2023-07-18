@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/board")
@@ -54,6 +55,13 @@ public class BoardController {
     @PostMapping(value = "/detail/{boardNum}")
     public void delete(@PathVariable("boardNum") Integer boardNum) {
         boardService.delete(boardNum);
+    }
+
+    //내가 쓴 게시글 불러오기
+    @GetMapping("/myBoard/{id}")
+    public List<BoardResponseDTO> myBoardList(@PathVariable("id") String id) {
+        List<BoardResponseDTO> myBoardList = boardService.getMyBoardList(id);
+        return myBoardList;
     }
 
 

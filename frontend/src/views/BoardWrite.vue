@@ -84,7 +84,8 @@ export default {
       },
       boardDetailData: {
         title: "",
-        content: ""
+        content: "",
+        id: "dfsfds"
       },
       content: ""
     };
@@ -107,7 +108,8 @@ export default {
       this.$axios
         .post("/board/save", {
           title: this.boardDetailData.title,
-          content: this.boardDetailData.content
+          content: this.boardDetailData.content,
+          id: JSON.parse(sessionStorage.getItem("sessionId"))
         })
         .then(res => {
           if (res.status === 200) {

@@ -3,6 +3,7 @@ import BoardList from "@/views/BoardList.vue";
 import BoardWrite from "@/views/BoardWrite.vue";
 import BoardDetail from "@/views/BoardDetail.vue";
 import BoardModify from "@/views/BoardModify.vue";
+import MyBoard from "@/views/MyBoard.vue";
 import Vue from "vue";
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
@@ -45,6 +46,12 @@ const routes = [
     path: "/boardModify/:boardNum",
     name: "boardModify",
     component: BoardModify
+  },
+  {
+    //내가 쓴 게시글 보기
+    path: "/myBoard/:id",
+    name: "myBoard",
+    component: MyBoard
   }
 ];
 

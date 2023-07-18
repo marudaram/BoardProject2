@@ -12,7 +12,7 @@ import java.util.Date;
 public class BoardResponseDTO {
 
     private Integer boardNum;
-    private String writer;
+    private String id;
     private String title;
     private String content;
     private Date regDate;

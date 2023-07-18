@@ -86,7 +86,7 @@ export default {
         boardNum: "",
         title: "",
         content: "",
-        writer: "",
+        id: "",
         regDate: "",
         hit: ""
       },
@@ -123,7 +123,7 @@ export default {
         .put(`board/detail/${this.boardChangeData.boardNum}`, {
           title: this.boardChangeData.title,
           content: this.boardChangeData.content,
-          writer: this.boardChangeData.writer
+          id: this.boardChangeData.id
         })
         .then(res => {
           this.boardChangeData = res.data;

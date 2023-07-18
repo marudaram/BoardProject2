@@ -6,8 +6,17 @@
       <v-spacer></v-spacer>
 
       <v-tabs centered color="grey-darken-2">
-        <v-tab v-for="link in links" :key="link">
-          {{ link }}
+        <v-tab @click="toBoardList">
+          <p>Board List</p>
+        </v-tab>
+        <v-tab @click="toMyPage">
+          <p>My Page</p>
+        </v-tab>
+        <v-tab @click="toWriting">
+          <p>Writing</p>
+        </v-tab>
+        <v-tab>
+          <p>Logout</p>
         </v-tab>
       </v-tabs>
       <v-spacer></v-spacer>
@@ -27,15 +36,26 @@
   </v-app>
 </template>
 
-<script setup>
-const links = ["Board List", "My Page", "Writing", "Logout"];
-</script>
-
 <script>
 export default {
   data: () => ({
-    links: ["Board List", "My Page", "Writing", "Logout"]
+    id: JSON.parse(sessionStorage.getItem("sessionId"))
   }),
-  methods: {}
+  methods: {
+    toBoardList() {
+      const path = `/boardList`;
+      if (this.$route.path !== path) this.$router.push(path);
+    },
+    toMyPage() {
+      const id = this.id;
+      const path = `/myBoard/${id}`;
+      if (this.$route.path !== path) this.$router.push(path);
+    },
+    toWriting() {
+      const path = `/boardWrite`;
+      if (this.$router.path !== path) this.$router.push(path);
+    }
+  },
+  beforeCreate() {}
 };
 </script>

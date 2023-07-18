@@ -19,7 +19,7 @@ import javax.persistence.Table;
 public class User {
 
     @Id
-    @Column(length = 30, nullable = false)
+    @Column(length = 30)
     private String id;
 
     @Column(length = 100)
