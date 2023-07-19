@@ -2,10 +2,17 @@
   <v-card class="mx-auto" max-width="344">
     <v-card-text>
       <p style="fontSize:20px; color:black; marginBottom:40px">LogIn</p>
-      <div>ID</div>
-      <v-text-field v-model="userInfo.id"> </v-text-field>
-      <div>Password</div>
-      <v-text-field v-model="userInfo.password"> </v-text-field>
+
+      <v-text-field label="ID" v-model="userInfo.id"> </v-text-field>
+      <v-text-field
+        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+        :rules="[rules.required, rules.min]"
+        :type="show1 ? 'text' : 'password'"
+        name="input-10-1"
+        label="password"
+        counter
+        @click:append="show1 = !show1"
+      ></v-text-field>
     </v-card-text>
     <v-card-actions>
       <v-btn
@@ -30,6 +37,16 @@ export default defineComponent({
       userInfo: {
         id: "",
         password: ""
+      },
+      show1: false,
+      show2: true,
+      show3: false,
+      show4: false,
+      password: "Password",
+      rules: {
+        required: value => !!value || "Required.",
+        min: v => v.length >= 8 || "Min 8 characters",
+        emailMatch: () => `The email and password you entered don't match`
       }
     };
   },

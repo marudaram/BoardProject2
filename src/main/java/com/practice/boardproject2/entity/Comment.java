@@ -38,4 +38,12 @@ public class Comment {
     @CreationTimestamp
     private Date regDate;
 
+
+    //댓글 수정하기
+    public void changeComment(String comContent) {
+        this.comContent = comContent;
+        this.regDate = new Date();
+    }
+
+
 }

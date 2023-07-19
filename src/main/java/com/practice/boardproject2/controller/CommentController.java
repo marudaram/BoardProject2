@@ -4,6 +4,8 @@ import com.practice.boardproject2.dto.CommentRequestDTO;
 import com.practice.boardproject2.dto.CommentResponseDTO;
 import com.practice.boardproject2.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -27,7 +29,32 @@ public class CommentController {
     @GetMapping("/comList/{boardNum}")
     public List<CommentResponseDTO> myCommentList(@PathVariable("boardNum") Integer boardNum) {
         List<CommentResponseDTO> myCommentList = commentService.getMyComments(boardNum);
+
         return myCommentList;
+    }
+
+
+    //댓글 삭제하기
+    @GetMapping("/comDelete")
+    public void comDelete(@RequestParam(value = "comNum", required = false) Integer comNum) {
+        System.out.println("컴넘?"+comNum);
+        commentService.comDelete(comNum);
+    }
+
+    //댓글 수정하기
+    @PutMapping("/comModify/{comNum}")
+    public ResponseEntity<CommentResponseDTO> comModify(@PathVariable("comNum") Integer comNum,
+                                                        @RequestBody CommentRequestDTO commentRequestDTO) {
+
+        commentRequestDTO.setComNum(comNum);
+        return new ResponseEntity<>(commentService.comModify(commentRequestDTO), HttpStatus.OK);
+
+    }
+
+    //수정한 댓글 가져오기
+    @GetMapping("/comDetail")
+    public ResponseEntity<CommentResponseDTO> comDetail(@RequestParam("comNum") Integer comNum) {
+        return new ResponseEntity<>(commentService.comDetail(comNum), HttpStatus.OK);
     }
 
 }

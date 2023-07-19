@@ -40,8 +40,18 @@
     </div>
     <div class="btnBox">
       <v-btn variant="tonal" @click="toBoardList"> 목록으로 </v-btn>
-      <v-btn variant="tonal" @click="boardDelete"> 삭제 </v-btn>
-      <v-btn variant="tonal" @click="modifyBoard">
+      <v-btn
+        variant="tonal"
+        @click="boardDelete"
+        v-if="sessionId === boardDetailData.id"
+      >
+        삭제
+      </v-btn>
+      <v-btn
+        variant="tonal"
+        @click="modifyBoard"
+        v-if="sessionId === boardDetailData.id"
+      >
         수정
       </v-btn>
     </div>
@@ -50,7 +60,9 @@
         <div class="commentMiniBox">
           <p class="commentTitle">댓글</p>
         </div>
+
         <v-textarea
+          style="width:80%"
           filled
           auto-grow
           label="댓글 작성"
@@ -58,7 +70,12 @@
           row-height="30"
           v-model="commentDetailData.comContent"
         ></v-textarea>
-        <v-btn variant="tonal" @click="comSubmit" style="marginTop:100px">
+
+        <v-btn
+          variant="tonal"
+          @click="comSubmit"
+          style="marginLeft:95%; marginBottom:20px;"
+        >
           작성
         </v-btn>
       </v-row>
@@ -76,13 +93,61 @@
           class="writtenComment"
           filled
           auto-grow
-          label="댓글 작성"
-          rows="4"
-          row-height="30"
           v-html="row.comContent"
-          disabled
         ></div>
+        <div class="commentInfoBox">
+          <v-input
+            error-count="3"
+            :error-messages="row.regDate"
+            error
+            disabled
+            class="writingInfo"
+          >
+          </v-input>
+          <div class="btnBox">
+            <v-layout row justify-center>
+              <button @click.stop="row.showModal = true">
+                수정
+              </button>
+
+              <v-dialog v-model="row.showModal" persistent max-width="1000px">
+                <v-card>
+                  <v-card-title class="headline">댓글 수정</v-card-title>
+
+                  <div class="commentMiniBox">
+                    <p class="commentTitle">{{ row.comWriter }}</p>
+                  </div>
+                  <v-textarea
+                    style="width:80%"
+                    label="댓글 작성"
+                    filled
+                    auto-grow
+                    rows="4"
+                    row-height="30"
+                    v-model="row.comContent"
+                  ></v-textarea>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+
+                    <v-btn
+                      color="green darken-1"
+                      @click="row.showModal = false"
+                    >
+                      취소
+                    </v-btn>
+
+                    <v-btn color="green darken-1" @click="comModifyBtn(row)">
+                      수정하기
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-layout>
+            <button @click="comDeleteBtn(row.comNum)">삭제</button>
+          </div>
+        </div>
       </v-row>
+      <template> </template>
     </div>
   </div>
 </template>
@@ -91,6 +156,7 @@
 export default {
   data() {
     return {
+      sessionId: JSON.parse(sessionStorage.getItem("sessionId")),
       boardDetailData: {
         boardNum: "",
         title: "",
@@ -99,13 +165,8 @@ export default {
         regDate: "",
         hit: ""
       },
-      commentDetailData: {
-        id: "",
-        comWriter: "",
-        comContent: "",
-        regDate: "",
-        boardNum: ""
-      }
+      commentDetailData: []
+      // dialog: false
     };
   },
   beforeCreate() {
@@ -125,13 +186,21 @@ export default {
     this.$axios
       .get(`/comment/comList/${boardNum}`)
       .then(res => {
-        this.commentDetailData = res.data;
-        console.log(res.data);
+        this.commentDetailData = res.data.map(d => {
+          console.log(" ==>> ", d.comWriter);
+          return {
+            ...d,
+            showModal: false
+          };
+        });
+        console.log(res.data, this.commentDetailData);
+        console.log("댓작성자" + this.commentDetailData[0].comWriter);
       })
       .catch(error => {
         console.log(error);
       });
   },
+
   methods: {
     toBoardList() {
       this.$router.push({ path: "/boardList" });
@@ -160,7 +229,9 @@ export default {
       }
     },
     comSubmit() {
-      let self = this;
+      alert(1);
+      const boardNum = this.boardDetailData.boardNum;
+
       this.$axios
         .post("/comment/comSave", {
           comWriter: JSON.parse(sessionStorage.getItem("sessionId")),
@@ -169,10 +240,67 @@ export default {
           boardNum: this.boardDetailData.boardNum
         })
         .then(res => {
-          const id = this.boardDetailData.id;
           if (res.status === 200) {
-            self.$router.push({ path: `/boardDetail/${id}` });
+            this.comLoad();
           }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    comDeleteBtn(comNum) {
+      let self = this;
+      console.log("컴넘은?" + comNum);
+
+      if (confirm("삭제하시겠습니까?")) {
+        this.$axios
+          .get(`/comment/comDelete`, {
+            params: { comNum: comNum }
+          })
+          .then(res => {
+            // self.$router.go(self.$router.currentRoute);
+            console.log(res);
+            this.commentDetailData = this.commentDetailData.filter(
+              c => c.comNum != comNum
+            );
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+    },
+    comModifyBtn(comment) {
+      alert(2);
+      const comNum = comment.comNum;
+      // console.log("컴넘?" + idx);
+      this.$axios
+        .put(`/comment/comModify/${comNum}`, {
+          comWriter: comment.comWriter,
+          comContent: comment.comContent
+        })
+        .then(res => {
+          // this.commentDetailData
+          const { data } = res;
+          const { boardNum, comContent, comNum, comWriter, id, regDate } = data;
+          comment.boardNum = boardNum;
+          comment.comContent = comContent;
+          comment.comNum = comNum;
+          comment.comWriter = comWriter;
+          comment.id = id;
+          comment.regDate = regDate;
+          comment.showModal = false;
+        });
+    },
+    comLoad() {
+      const boardNum = this.boardDetailData.boardNum;
+      this.$axios
+        .get(`/comment/comList/${boardNum}`)
+        .then(res => {
+          this.commentDetailData = res.data.map(d => ({
+            ...d
+          }));
+          console.log(res.data);
+          console.log("댓작성자" + this.commentDetailData[0].comWriter);
         })
         .catch(error => {
           console.log(error);
@@ -219,7 +347,19 @@ button {
 .writtenComment {
   border: 1px solid lightgray;
   width: 78%;
-  padding-top: 10px;
-  padding-left: 10px;
+}
+
+.commentInfoBox {
+  position: absolute;
+  right: 11%;
+}
+
+.commentInfoBox .btnBox {
+  margin-top: 100px;
+}
+
+.commentInfoBox button {
+  font-size: 10px;
+  color: gray;
 }
 </style>

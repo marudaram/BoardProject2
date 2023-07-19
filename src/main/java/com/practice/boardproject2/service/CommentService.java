@@ -44,6 +44,30 @@ public class CommentService {
         return commentResponseDTOList;
     }
 
+
+    //댓글 삭제하기
+    @Transactional
+    public void comDelete(Integer comNum) {
+        commentRepository.comDelete(comNum);
+    }
+
+    //댓글 수정하기
+    @Transactional
+    public CommentResponseDTO comModify(CommentRequestDTO commentRequestDTO) {
+        Comment comment = commentRepository.findById(commentRequestDTO.getComNum())
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 수정할 수 없습니다."));
+        comment.changeComment(commentRequestDTO.getComContent());
+        return toDto(comment);
+    }
+
+    //수정한 댓글 가져오기
+    @Transactional
+    public CommentResponseDTO comDetail(Integer comNum) {
+        Comment comment = commentRepository.findById(comNum).orElseThrow(() -> new IllegalArgumentException("없습니다"));
+        return toDto(comment);
+    }
+
+
     private CommentResponseDTO toDto(Comment comment) {
         return CommentResponseDTO.builder()
                 .comNum(comment.getComNum())

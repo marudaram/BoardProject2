@@ -1,22 +1,22 @@
 <template>
   <v-container>
-    <v-col>
+    <v-col style="textAlign:center">
       <v-simple-table style="marginTop:30px">
         <thead>
           <tr>
-            <th class="text-left no">
+            <th class="text-left no" style="paddingLeft:2%">
               No
             </th>
-            <th class="text-left subject">
+            <th class="text-left subject" style="width:40%; paddingLeft:18%">
               제목
             </th>
-            <th class="text-left">
+            <th class="text-left" style="paddingLeft:60px">
               작성자
             </th>
-            <th class="text-left">
+            <th class="text-left" style=" paddingLeft:13%">
               날짜
             </th>
-            <th class="text-left">
+            <th class="text-left" style="paddingLeft: 2%">
               조회수
             </th>
           </tr>
@@ -28,7 +28,7 @@
             @click="detail(row.boardNum)"
           >
             <td>{{ row.boardNum }}</td>
-            <td>{{ row.title }}</td>
+            <td style="textAlign:center">{{ row.title }}</td>
             <td>{{ row.id }}</td>
             <td>{{ row.regDate }}</td>
             <td>{{ row.hit }}</td>

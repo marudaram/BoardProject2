@@ -50,9 +50,9 @@ public class Board {
     }
 
     //댓글이랑 join
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "boardNum")
-    private List<Comment> commentList = new ArrayList<>();
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+//    @JoinColumn(name = "boardNum")
+//    private List<Comment> commentList = new ArrayList<>();
 
 
 }
