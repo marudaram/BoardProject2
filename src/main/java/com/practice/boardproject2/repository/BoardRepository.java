@@ -15,7 +15,9 @@ import java.util.List;
 public interface BoardRepository extends JpaRepository<Board, Integer> {
     Page<Board> findAll(Pageable pageable);
 
-    @Modifying
+
+
+    @Modifying//
     @Query(value = "update Board b set b.hit=b.hit+1 where b.boardNum=:boardNum")
     void increaseHit(@Param("boardNum") Integer boardNum);
 

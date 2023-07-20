@@ -1,7 +1,16 @@
 <template>
   <v-container>
     <v-col style="textAlign:center">
-      <v-simple-table style="marginTop:30px">
+      <v-btn
+        variant="tonal"
+        @click="toBoardWrite"
+        style="display:block; position:absolute; top:-2%; left: 80%"
+      >
+        글 등록
+      </v-btn>
+
+      <!-- 테이블 타이틀부분 -->
+      <v-simple-table style="marginTop:30px; position:relative">
         <thead>
           <tr>
             <th class="text-left no" style="paddingLeft:2%">
@@ -21,6 +30,7 @@
             </th>
           </tr>
         </thead>
+        <!-- 테이블 내용부분 -->
         <tbody>
           <tr
             v-for="(row, idx) in listData"
@@ -30,25 +40,19 @@
             <td>{{ row.boardNum }}</td>
             <td style="textAlign:center">{{ row.title }}</td>
             <td>{{ row.id }}</td>
-            <td>{{ row.regDate }}</td>
+            <td>{{ $moment(row.regDate).format("YYYY-MM-DD HH:MM") }}</td>
             <td>{{ row.hit }}</td>
           </tr>
         </tbody>
       </v-simple-table>
     </v-col>
     <v-col>
-      <v-btn variant="tonal">
-        목록으로
-      </v-btn>
-      <v-btn variant="tonal" @click="toBoardWrite">
-        글 등록
-      </v-btn>
-
+      <!-- 페이지네이션 부분 -->
       <v-pagination
         v-model="page"
-        :length="10"
+        :length="totalPages < 10 ? totalPages : 10"
         circle
-        @input="routePage({ page: page }), getBoardList()"
+        @input="routePage({ page: page })"
       ></v-pagination>
     </v-col>
   </v-container>
@@ -82,6 +86,7 @@ export default {
       const { page, amount } = JSON.parse(criteriaObj);
       this.page = page;
       this.amount = amount;
+
       this.getBoardList();
     }
   },
@@ -91,6 +96,8 @@ export default {
       const { page, amount } = JSON.parse(param);
       this.page = page;
       this.amount = amount;
+
+      console.log(this.$route.params.criteriaObj);
     }
     this.getBoardList();
   },
@@ -98,33 +105,28 @@ export default {
     toBoardWrite() {
       this.$router.push({ path: "/boardWrite" });
     },
-    getBoardList() {
-      this.$axios
-        .get("/board/list", {
-          params: {
-            page: this.page > 0 ? this.page - 1 : this.page,
-            amount: this.amount
-          }
-        })
-        .then(res => {
-          const { status, data } = res;
-          if (status !== 200) alert("에러가 발생했습니다!");
-          const {
-            content: list,
-            number: page,
-            totalElements,
-            size: amount,
-            totalPages
-          } = data;
-          this.listData = list;
-          this.page = page + 1;
-          this.amount = amount;
-          this.totalElements = totalElements;
-          this.totalPages = totalPages;
-        })
-        .catch(error => {
-          console.log(error);
-        });
+    async getBoardList() {
+      const { status, data } = await this.$axios.get("/board/list", {
+        params: {
+          page: this.page > 0 ? this.page - 1 : this.page,
+          amount: this.amount
+        }
+      });
+
+      if (status == 200) {
+        const {
+          content: list,
+          number: page,
+          totalElements,
+          size: amount,
+          totalPages
+        } = data;
+        this.listData = list;
+        this.page = page + 1;
+        this.amount = amount;
+        this.totalElements = totalElements;
+        this.totalPages = totalPages;
+      }
     },
     detail(idx) {
       this.$router.push({

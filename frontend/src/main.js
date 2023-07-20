@@ -6,15 +6,18 @@ import axios from "axios";
 import VueResource from "vue-resource";
 import session from "vue-session";
 import store from "@/assets/store";
+import moment from "moment";
 
 Vue.config.productionTip = false;
 Vue.prototype.$session = session;
 Vue.prototype.$store = store;
 Vue.prototype.$axios = axios;
+Vue.prototype.$moment = moment;
 new Vue({
   vuetify,
   router,
   store,
+  moment,
   render: h => h(App)
 }).$mount("#app");
 

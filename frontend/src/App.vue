@@ -5,7 +5,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-tabs centered color="grey-darken-2">
+      <v-tabs centered color="grey-darken-2" class="header">
         <v-tab @click="toBoardList">
           <p>Board List</p>
         </v-tab>
@@ -59,3 +59,8 @@ export default {
   beforeCreate() {}
 };
 </script>
+
+<style>
+.header {
+}
+</style>

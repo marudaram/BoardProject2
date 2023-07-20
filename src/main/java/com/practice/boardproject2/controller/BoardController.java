@@ -24,14 +24,14 @@ public class BoardController {
     //게시글 저장
     @PostMapping(value = "/save")
     public BoardResponseDTO save(@RequestBody BoardRequestDTO boardRequestDTO) {
-        boardRequestDTO.setRegDate(new Date());
+        Date date = new Date();
+        boardRequestDTO.setRegDate(date);
         return boardService.save(boardRequestDTO);
     }
 
-    //게시판 리스트
+    //게시판 리스트 -restcontroller확인
     @GetMapping("/list")
     public Page<BoardResponseDTO> list(Criteria cri) {
-        //총 개수
         Page<BoardResponseDTO> boardList =  boardService.getBoardList(cri);
         return boardList;
     }

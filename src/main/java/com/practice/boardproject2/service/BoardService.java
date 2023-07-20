@@ -50,14 +50,14 @@ public class BoardService {
         return toDto(board);
     }
 
-    //조회수 증가
+    //조회수 증가 - 디테일에 병합
     @Modifying
     @Transactional
     public void increaseHit(Integer boardNum) {
         boardRepository.increaseHit(boardNum);
     }
 
-    //게시글 수정하기
+    //게시글 수정하기 권한체크
     @Transactional
     public BoardResponseDTO modify(BoardRequestDTO boardRequestDTO) {
         Board board = boardRepository.findById(boardRequestDTO.getBoardNum())
@@ -66,7 +66,7 @@ public class BoardService {
         return toDto(board);
     }
 
-    //게시글 삭제하기
+    //게시글 삭제하기 권한체크
     @Transactional
     public void delete(Integer boardNum) {
         boardRepository.deleteById(boardNum);
@@ -90,6 +90,18 @@ public class BoardService {
         }
         return myBoardList;
     }
+
+
+    //게시글 리스트 가져오기
+//    @Transactional
+//    public Page<BoardResponseDTO> getBoardList(Criteria cri) {
+//
+//        PageRequest pageRequest = PageRequest.of(cri.getPage(), cri.getAmount(), Sort.by("boardNum").descending());
+//        Page<Board> boardPage = boardRepository.findAll(pageRequest);
+//        List<BoardResponseDTO> dtoList = boardPage.stream().map(this::toDto).collect(Collectors.toList());
+//
+//        return new PageImpl<>(dtoList, boardPage.getPageable(), boardPage.getTotalElements());
+//    }
 
 
     private BoardResponseDTO toDto(Board board) {

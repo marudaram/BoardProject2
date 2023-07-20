@@ -33,7 +33,6 @@ public class Board {
     private String title;
 
     @Lob
-//    @Column(columnDefinition = "TEXT") //type을 text로 바꿔준다
     private String content;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")

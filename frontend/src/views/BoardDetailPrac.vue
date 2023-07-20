@@ -15,7 +15,7 @@
           <v-input
             error-count="3"
             :error-messages="[
-              '날짜: ' + this.boardDetailData.regDate,
+              '날짜: ' + this.boardDetailData.hit,
               '조회수: ' + this.boardDetailData.hit,
               '작성자: ' + this.boardDetailData.id
             ]"
@@ -25,7 +25,7 @@
           >
           </v-input>
           <v-card-text
-            v-html="boardDetailData.content"
+            v-model="boardDetailData.content"
             style="marginTop:100px;"
           ></v-card-text>
         </v-responsive>
@@ -88,7 +88,32 @@
         <div class="commentMiniBox">
           <p class="commentTitle">{{ row.comWriter }}</p>
         </div>
-        <div class="writtenComment" v-html="row.comContent"></div>
+        <!-- 댓글 작성하는 곳 -->
+        <div
+          class="writtenComment"
+          v-html="row.comContent"
+          v-if="readMode"
+        ></div>
+        <v-textarea
+          label="댓글 수정"
+          filled
+          auto-grow
+          rows="4"
+          row-height="30"
+          v-model="row.comContent"
+          v-else
+        >
+        </v-textarea>
+        <div class="btnWrapBox">
+          <button v-if="!readMode" class="modiBtn1">
+            취소
+          </button>
+
+          <button v-if="!readMode" class="modiBtn2">
+            수정하기
+          </button>
+        </div>
+
         <div class="commentInfoBox">
           <v-input
             error-count="3"
@@ -99,45 +124,12 @@
           >
           </v-input>
           <div class="btnBox">
-            <v-layout row justify-center>
-              <button @click.stop="row.showModal = true">
-                수정
-              </button>
-
-              <v-dialog v-model="row.showModal" persistent max-width="1000px">
-                <v-card>
-                  <v-card-title class="headline">댓글 수정</v-card-title>
-
-                  <div class="commentMiniBox">
-                    <p class="commentTitle">{{ row.comWriter }}</p>
-                  </div>
-                  <v-textarea
-                    style="width:80%"
-                    label="댓글 작성"
-                    filled
-                    auto-grow
-                    rows="4"
-                    row-height="30"
-                    v-model="row.comContent"
-                  ></v-textarea>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-
-                    <v-btn
-                      color="green darken-1"
-                      @click="row.showModal = false"
-                    >
-                      취소
-                    </v-btn>
-
-                    <v-btn color="green darken-1" @click="comModifyBtn(row)">
-                      수정하기
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-layout>
-            <button @click="comDeleteBtn(row.comNum)">삭제</button>
+            <button @click="comDeleteBtn(row.comNum)" v-if="readMode">
+              삭제
+            </button>
+            <button @click="wantToModifyBtn" v-if="readMode">
+              수정
+            </button>
           </div>
         </div>
       </v-row>
@@ -159,8 +151,8 @@ export default {
         regDate: "",
         hit: ""
       },
-      commentDetailData: []
-      // dialog: false
+      commentDetailData: [],
+      readMode: true
     };
   },
   beforeCreate() {
@@ -249,6 +241,7 @@ export default {
             params: { comNum: comNum }
           })
           .then(res => {
+            // self.$router.go(self.$router.currentRoute);
             console.log(res);
             this.commentDetailData = this.commentDetailData.filter(
               c => c.comNum != comNum
@@ -268,7 +261,10 @@ export default {
           comContent: comment.comContent
         })
         .then(res => {
-          const { data } = res;
+          const { status, data } = res;
+          if (status !== 200) {
+            alert("에러가 발생했습니다");
+          }
           const { boardNum, comContent, comNum, comWriter, id, regDate } = data;
           comment.boardNum = boardNum;
           comment.comContent = comContent;
@@ -293,6 +289,9 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    wantToModifyBtn() {
+      this.readMode = false;
     }
   }
 };
@@ -347,6 +346,27 @@ button {
 }
 
 .commentInfoBox button {
+  font-size: 10px;
+  color: gray;
+}
+
+.btnWrapBox {
+  position: relative;
+  width: 150px;
+}
+
+.modiBtn1 {
+  position: absolute;
+  top: 30%;
+  right: 100px;
+  font-size: 10px;
+  color: gray;
+}
+
+.modiBtn2 {
+  position: absolute;
+  top: 30%;
+  right: 150px;
   font-size: 10px;
   color: gray;
 }

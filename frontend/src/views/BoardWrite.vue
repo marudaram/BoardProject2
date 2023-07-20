@@ -1,28 +1,24 @@
 <template>
   <v-container>
     <v-col class="wrapBox">
+      <!-- 제목 -->
       <input
         type="text"
         placeholder="제목"
         class="titleArea"
         v-model="boardDetailData.title"
       />
-
+      <!-- 에디터 -->
       <div class="example">
         <quill-editor
           class="editor"
           style="height:300px;"
           ref="myTextEditor"
           :disabled="false"
-          :value="content"
           :options="editorOption"
           @change="onEditorChange"
-          @blur="onEditorBlur($event)"
-          @focus="onEditorFocus($event)"
-          @ready="onEditorReady($event)"
           v-model="boardDetailData.content"
         />
-        <div class="output ql-snow"></div>
       </div>
     </v-col>
 
@@ -39,8 +35,6 @@
 import hljs from "highlight.js";
 import debounce from "lodash/debounce";
 import { quillEditor } from "vue-quill-editor";
-//css 커스터마이징
-// import "src/assets/sass/overrides.sass";
 
 // highlight.js style
 import "highlight.js/styles/tomorrow.css";
@@ -61,6 +55,7 @@ export default {
       editorOption: {
         placeholder: "place holder test",
         modules: {
+          // 에디터 툴바
           toolbar: [
             ["bold", "italic", "underline", "strike"], // <strong>, <em>, <u>, <s>
             ["blockquote", "code-block"], // <blockquote>, <pre class="ql-syntax" spellcheck="false">
@@ -85,41 +80,40 @@ export default {
       boardDetailData: {
         title: "",
         content: "",
-        id: "dfsfds"
-      },
-      content: ""
+        id: ""
+      }
     };
   },
   methods: {
     onEditorChange: debounce(function(value) {
       this.content = value.html;
     }, 466),
-    onEditorBlur(editor) {
-      console.log("editor blur!", editor);
+
+    // 글 등록 메서드
+    async onSubmit() {
+      if (
+        this.boardDetailData.title == "" ||
+        this.boardDetailData.content == ""
+      ) {
+        alert("제목과 내용은 필수입니다.");
+      } else {
+        await this.$axios
+          .post("/board/save", {
+            title: this.boardDetailData.title,
+            content: this.boardDetailData.content,
+            id: JSON.parse(sessionStorage.getItem("sessionId"))
+          })
+          .then(res => {
+            if (res.status === 200) {
+              this.$router.push({ path: "/boardList" });
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
     },
-    onEditorFocus(editor) {
-      console.log("editor focus!", editor);
-    },
-    onEditorReady(editor) {
-      console.log("editor ready!", editor);
-    },
-    onSubmit() {
-      let self = this;
-      this.$axios
-        .post("/board/save", {
-          title: this.boardDetailData.title,
-          content: this.boardDetailData.content,
-          id: JSON.parse(sessionStorage.getItem("sessionId"))
-        })
-        .then(res => {
-          if (res.status === 200) {
-            self.$router.push({ path: "/boardList" });
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
+    // 게시판 화면으로 이동하는 메서드
     toBoardList() {
       this.$router.push({ path: "/boardList" });
     }
@@ -131,9 +125,6 @@ export default {
     contentCode() {
       return hljs.highlightAuto(this.content).value;
     }
-  },
-  mounted() {
-    console.log("this is Quill instance:", this.editor);
   }
 };
 </script>
