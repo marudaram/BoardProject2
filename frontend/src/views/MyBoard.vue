@@ -4,13 +4,6 @@
       <v-simple-table style="marginTop:30px">
         <thead>
           <tr>
-            <th style="text-align: center; width: 50px">
-              <input
-                type="checkbox"
-                v-model="allSelected"
-                @click="selectAll($event.target.checked)"
-              />
-            </th>
             <th class="text-left no">
               No
             </th>
@@ -28,17 +21,9 @@
             </th>
           </tr>
         </thead>
+
         <tbody>
           <tr v-for="(row, idx) in myListData" :key="idx">
-            <td>
-              <input
-                type="checkbox"
-                :id="'check_' + row.boardNum"
-                :value="row.boardNum"
-                v-model="row.selected"
-                @change="selected($event)"
-              />
-            </td>
             <td @click="detail(row.boardNum)">{{ row.boardNum }}</td>
             <td @click="detail(row.boardNum)">{{ row.title }}</td>
             <td @click="detail(row.boardNum)">{{ row.id }}</td>
@@ -55,8 +40,8 @@
       <v-btn variant="tonal" @click="toBoardWrite">
         글 등록
       </v-btn>
-
-      <v-pagination v-model="page" :length="10" circle></v-pagination>
+      <!-- 
+      <v-pagination v-model="page" :length="10" circle></v-pagination> -->
     </v-col>
   </v-container>
 </template>
@@ -71,12 +56,11 @@ export default {
         content: "",
         regDate: "",
         hit: 0
-      },
-      boardNums: [],
-      allSelected: false
+      }
     };
   },
-  beforeCreate() {
+  watch: {},
+  mounted() {
     const id = JSON.parse(sessionStorage.getItem("sessionId"));
     this.$axios
       .get(`/board/myBoard/${id}`)
@@ -99,31 +83,6 @@ export default {
     },
     toBoardWrite() {
       this.$router.push("/boardWrite");
-    },
-    selectAll(checked) {
-      this.allSelected = checked;
-      for (let i in this.myListData) {
-        this.myListData[i].selected = this.allSelected;
-      }
-      console.log(this.boardNums[0]);
-    },
-    selected(e) {
-      for (let i in this.myListData) {
-        if (!this.myListData[i].selected) {
-          this.allSelected = false;
-          return;
-        } else {
-          this.allSelected = true;
-        }
-      }
-    },
-    getSelected() {
-      let boardNums = [];
-      for (let i in this.myListData) {
-        if (this.myListData[i].selected) {
-          boardNums.push(this.myListData[i].boardNum);
-        }
-      }
     }
   }
 };

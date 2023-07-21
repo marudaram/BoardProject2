@@ -1,10 +1,29 @@
 <template>
-  <v-container>
+  <v-container style="position:relative">
     <v-col style="textAlign:center">
+      <div style="marginBottom:100px">
+        <v-text-field
+          hide-details
+          prepend-icon="mdi-magnify"
+          single-line
+          style="float:left; marginRight:10px"
+          v-model="searchKeyword"
+        ></v-text-field>
+        <v-btn variant="tonal" @click="getBoardList" style="float:left">
+          검색
+        </v-btn>
+        <v-select
+          :items="searchOption"
+          outlined
+          style="float:left"
+          v-model="searchOptionSelected"
+        ></v-select>
+      </div>
+
       <v-btn
         variant="tonal"
         @click="toBoardWrite"
-        style="display:block; position:absolute; top:-2%; left: 80%"
+        style="display:block; position:absolute; top:2%; left: 90%"
       >
         글 등록
       </v-btn>
@@ -73,7 +92,12 @@ export default {
       page: 1,
       amount: 10,
       totalElements: 0,
-      totalPages: 0
+      totalPages: 0,
+
+      //검색 관련
+      searchOption: ["CONTENT", "TITLE", "ID"], // 검색 옵션
+      searchKeyword: "", //검색 키워드
+      searchOptionSelected: "CONTENT" //검색 옵션값 받아오기, 기본값은 본문으로 지정
     };
   },
   computed: {
@@ -109,7 +133,9 @@ export default {
       const { status, data } = await this.$axios.get("/board/list", {
         params: {
           page: this.page > 0 ? this.page - 1 : this.page,
-          amount: this.amount
+          amount: this.amount,
+          keyword: this.searchKeyword,
+          searchOption: this.searchOptionSelected
         }
       });
 
@@ -126,6 +152,10 @@ export default {
         this.amount = amount;
         this.totalElements = totalElements;
         this.totalPages = totalPages;
+
+        if (this.$route.path !== `/boardList`) {
+          this.$router.push(`/boardList`);
+        }
       }
     },
     detail(idx) {

@@ -2,8 +2,7 @@ package com.practice.boardproject2.controller;
 
 import com.practice.boardproject2.dto.BoardRequestDTO;
 import com.practice.boardproject2.dto.BoardResponseDTO;
-import com.practice.boardproject2.entity.Board;
-import com.practice.boardproject2.pagination.Criteria;
+import com.practice.boardproject2.dto.BoardSearchDTO;
 import com.practice.boardproject2.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,8 +30,8 @@ public class BoardController {
 
     //게시판 리스트 -restcontroller확인
     @GetMapping("/list")
-    public Page<BoardResponseDTO> list(Criteria cri) {
-        Page<BoardResponseDTO> boardList =  boardService.getBoardList(cri);
+    public Page<BoardResponseDTO> list(BoardSearchDTO param) {
+        Page<BoardResponseDTO> boardList =  boardService.getBoardList(param);
         return boardList;
     }
 
@@ -63,6 +62,8 @@ public class BoardController {
         List<BoardResponseDTO> myBoardList = boardService.getMyBoardList(id);
         return myBoardList;
     }
+
+
 
 
 }

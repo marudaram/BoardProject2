@@ -2,22 +2,23 @@ package com.practice.boardproject2.service;
 
 import com.practice.boardproject2.dto.BoardRequestDTO;
 import com.practice.boardproject2.dto.BoardResponseDTO;
+import com.practice.boardproject2.dto.BoardSearchDTO;
 import com.practice.boardproject2.entity.Board;
-import com.practice.boardproject2.pagination.Criteria;
 import com.practice.boardproject2.repository.BoardRepository;
+import com.practice.boardproject2.repository.spec.BoardSpecification;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,13 +35,30 @@ public class BoardService {
 
     //게시글 리스트 가져오기
     @Transactional
-    public Page<BoardResponseDTO> getBoardList(Criteria cri) {
+    public Page<BoardResponseDTO> getBoardList(BoardSearchDTO param) {
 
-        PageRequest pageRequest = PageRequest.of(cri.getPage(), cri.getAmount(), Sort.by("boardNum").descending());
-        Page<Board> boardPage = boardRepository.findAll(pageRequest);
-        List<BoardResponseDTO> dtoList = boardPage.stream().map(this::toDto).collect(Collectors.toList());
+        PageRequest pageRequest = PageRequest.of(param.getPage(), param.getAmount(), Sort.by("boardNum").descending());
 
-        return new PageImpl<>(dtoList, boardPage.getPageable(), boardPage.getTotalElements());
+        Specification<Board> spec;
+        switch (param.getSearchOption()) {
+            case TITLE:
+                spec = BoardSpecification.withTitle(param.getKeyword());
+                break;
+//            case CONTENT:
+//                spec = BoardSpecification.withContent(param.getKeyword());
+//
+//                break;
+            case ID:
+                spec = BoardSpecification.withId(param.getKeyword());
+
+                break;
+            default:
+                spec = BoardSpecification.withContent(param.getKeyword());
+        }
+
+        Page<Board> page = boardRepository.findAll(spec, pageRequest);
+        return new PageImpl<>(page.map(this::toDto).toList(), page.getPageable(), page.getTotalElements());
+
     }
 
     //게시글 디테일
@@ -91,17 +109,8 @@ public class BoardService {
         return myBoardList;
     }
 
-
-    //게시글 리스트 가져오기
-//    @Transactional
-//    public Page<BoardResponseDTO> getBoardList(Criteria cri) {
-//
-//        PageRequest pageRequest = PageRequest.of(cri.getPage(), cri.getAmount(), Sort.by("boardNum").descending());
-//        Page<Board> boardPage = boardRepository.findAll(pageRequest);
-//        List<BoardResponseDTO> dtoList = boardPage.stream().map(this::toDto).collect(Collectors.toList());
-//
-//        return new PageImpl<>(dtoList, boardPage.getPageable(), boardPage.getTotalElements());
-//    }
+    @Transactional
+    public void deleteMine(Integer boardNum) {boardRepository.deleteById(boardNum);}
 
 
     private BoardResponseDTO toDto(Board board) {
