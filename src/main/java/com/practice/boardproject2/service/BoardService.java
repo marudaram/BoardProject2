@@ -4,6 +4,7 @@ import com.practice.boardproject2.dto.BoardRequestDTO;
 import com.practice.boardproject2.dto.BoardResponseDTO;
 import com.practice.boardproject2.dto.BoardSearchDTO;
 import com.practice.boardproject2.entity.Board;
+import com.practice.boardproject2.pagination.Criteria;
 import com.practice.boardproject2.repository.BoardRepository;
 import com.practice.boardproject2.repository.spec.BoardSpecification;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,10 +46,10 @@ public class BoardService {
             case TITLE:
                 spec = BoardSpecification.withTitle(param.getKeyword());
                 break;
-//            case CONTENT:
-//                spec = BoardSpecification.withContent(param.getKeyword());
-//
-//                break;
+            case CONTENT:
+                spec = BoardSpecification.withContent(param.getKeyword());
+
+                break;
             case ID:
                 spec = BoardSpecification.withId(param.getKeyword());
 
@@ -92,21 +94,11 @@ public class BoardService {
 
     //내가 쓴 게시글 가져오기
     @Transactional
-    public List<BoardResponseDTO> getMyBoardList(String id) {
-        List<Board> boardList = boardRepository.findById(id);
-        List<BoardResponseDTO> myBoardList = new ArrayList<>();
-        for(Board board : boardList) {
-            BoardResponseDTO boardResponseDTO = BoardResponseDTO.builder()
-                    .boardNum(board.getBoardNum())
-                    .id(board.getId())
-                    .title(board.getTitle())
-                    .content(board.getContent())
-                    .regDate(board.getRegDate())
-                    .hit(board.getHit())
-                    .build();
-            myBoardList.add(boardResponseDTO);
-        }
-        return myBoardList;
+    public Page<BoardResponseDTO> getMyBoardList(String id, Criteria cri) {
+        PageRequest pageRequest = PageRequest.of(cri.getPage(), cri.getAmount(), Sort.by("boardNum").descending());
+        Page<Board> myBoardPage = boardRepository.findAllById(id, pageRequest);
+        List<BoardResponseDTO> dtoList = myBoardPage.stream().map(this::toDto).collect(Collectors.toList());
+        return new PageImpl<>(dtoList, myBoardPage.getPageable(), myBoardPage.getTotalElements());
     }
 
     @Transactional

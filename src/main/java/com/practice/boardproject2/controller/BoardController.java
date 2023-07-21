@@ -3,6 +3,7 @@ package com.practice.boardproject2.controller;
 import com.practice.boardproject2.dto.BoardRequestDTO;
 import com.practice.boardproject2.dto.BoardResponseDTO;
 import com.practice.boardproject2.dto.BoardSearchDTO;
+import com.practice.boardproject2.pagination.Criteria;
 import com.practice.boardproject2.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -58,8 +59,8 @@ public class BoardController {
 
     //내가 쓴 게시글 불러오기
     @GetMapping("/myBoard/{id}")
-    public List<BoardResponseDTO> myBoardList(@PathVariable("id") String id) {
-        List<BoardResponseDTO> myBoardList = boardService.getMyBoardList(id);
+    public Page<BoardResponseDTO> myBoardList(@PathVariable("id") String id, Criteria cri) {
+        Page<BoardResponseDTO> myBoardList = boardService.getMyBoardList(id, cri);
         return myBoardList;
     }
 

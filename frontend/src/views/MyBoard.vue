@@ -1,6 +1,31 @@
 <template>
   <v-container>
     <v-col>
+      <div style="marginBottom:100px">
+        <v-text-field
+          hide-details
+          prepend-icon="mdi-magnify"
+          single-line
+          style="float:left; marginRight:10px"
+          v-model="searchKeyword"
+        ></v-text-field>
+        <v-btn variant="tonal" @click="getBoardList" style="float:left">
+          검색
+        </v-btn>
+        <v-select
+          :items="searchOption"
+          outlined
+          style="float:left"
+          v-model="searchOptionSelected"
+        ></v-select>
+      </div>
+      <v-btn
+        variant="tonal"
+        @click="toBoardWrite"
+        style="display:block; position:absolute; top:2%; left: 90%"
+      >
+        글 등록
+      </v-btn>
       <v-simple-table style="marginTop:30px">
         <thead>
           <tr>
@@ -40,8 +65,13 @@
       <v-btn variant="tonal" @click="toBoardWrite">
         글 등록
       </v-btn>
-      <!-- 
-      <v-pagination v-model="page" :length="10" circle></v-pagination> -->
+
+      <v-pagination
+        v-model="page"
+        :length="totalPages < 10 ? totalPages : 10"
+        circle
+        @input="routePage({ page: page })"
+      ></v-pagination>
     </v-col>
   </v-container>
 </template>
@@ -56,21 +86,30 @@ export default {
         content: "",
         regDate: "",
         hit: 0
-      }
+      },
+
+      //페이지 이동에 필요한 초기값
+      page: 1,
+      amount: 10,
+      totalElements: 0,
+      totalPages: 0
     };
   },
-  watch: {},
+  computed: {
+    param() {
+      return this.$route.params.obj;
+    }
+  },
+  watch: {
+    param(obj) {
+      const { page, amount } = JSON.parse(obj);
+      this.page = page;
+      this.amount = amount;
+      this.getMyBoardList();
+    }
+  },
   mounted() {
-    const id = JSON.parse(sessionStorage.getItem("sessionId"));
-    this.$axios
-      .get(`/board/myBoard/${id}`)
-      .then(res => {
-        this.myListData = res.data;
-        console.log(res.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    this.getMyBoardList();
   },
   methods: {
     detail(idx) {
@@ -81,8 +120,39 @@ export default {
         }
       });
     },
+    routePage({ page = 1, amount = this.amount }) {
+      this.$router.push({
+        name: "myListParam",
+        params: {
+          obj: JSON.stringify({ page, amount })
+        }
+      });
+    },
     toBoardWrite() {
       this.$router.push("/boardWrite");
+    },
+    async getMyBoardList() {
+      const id = JSON.parse(sessionStorage.getItem("sessionId"));
+      const { status, data } = await this.$axios.get(`/board/myBoard/${id}`, {
+        params: {
+          page: this.page > 0 ? this.page - 1 : this.page,
+          amount: this.amount
+        }
+      });
+      if (status == 200) {
+        const {
+          content: list,
+          number: page,
+          totalElements,
+          size: amount,
+          totalPages
+        } = data;
+        this.myListData = list;
+        this.page = page + 1;
+        this.amount = amount;
+        this.totalElements = totalElements;
+        this.totalPages = totalPages;
+      }
     }
   }
 };

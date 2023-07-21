@@ -26,4 +26,7 @@ public interface BoardRepository extends JpaRepository<Board, Integer>, JpaSpeci
     void deleteById(@PathVariable("boardNum") Integer boardNum);
 
 
+    Page<Board> findAllById(@PathVariable("String id") String id, Pageable pageable);
+
+
 }
