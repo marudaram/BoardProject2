@@ -40,7 +40,8 @@ public class BoardController {
     @GetMapping(value = "/detail/{boardNum}")
     public ResponseEntity<BoardResponseDTO> read(@PathVariable("boardNum") Integer boardNum) {
         boardService.increaseHit(boardNum);
-        return new ResponseEntity<>(boardService.read(boardNum), HttpStatus.OK);
+
+        return ResponseEntity.ok(boardService.read(boardNum));
     }
 
     //게시글 수정하기
@@ -59,8 +60,8 @@ public class BoardController {
 
     //내가 쓴 게시글 불러오기
     @GetMapping("/myBoard/{id}")
-    public Page<BoardResponseDTO> myBoardList(@PathVariable("id") String id, Criteria cri) {
-        Page<BoardResponseDTO> myBoardList = boardService.getMyBoardList(id, cri);
+    public Page<BoardResponseDTO> myBoardList(@PathVariable("id") String id, BoardSearchDTO param) {
+        Page<BoardResponseDTO> myBoardList = boardService.getMyBoardList(id, param);
         return myBoardList;
     }
 
