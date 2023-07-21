@@ -42,17 +42,16 @@ public class BoardService {
         PageRequest pageRequest = PageRequest.of(param.getPage(), param.getAmount(), Sort.by("boardNum").descending());
 
         Specification<Board> spec;
+
         switch (param.getSearchOption()) {
             case TITLE:
                 spec = BoardSpecification.withTitle(param.getKeyword());
                 break;
             case CONTENT:
                 spec = BoardSpecification.withContent(param.getKeyword());
-
                 break;
             case ID:
                 spec = BoardSpecification.withId(param.getKeyword());
-
                 break;
             default:
                 spec = BoardSpecification.withContent(param.getKeyword());

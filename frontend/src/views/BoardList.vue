@@ -95,7 +95,7 @@ export default {
       totalPages: 0,
 
       //검색 관련
-      searchOption: ["CONTENT", "TITLE", "ID"], // 검색 옵션
+      searchOption: ["CONTENT", "TITLE", "WRITER"], // 검색 옵션
       searchKeyword: "", //검색 키워드
       searchOptionSelected: "CONTENT" //검색 옵션값 받아오기, 기본값은 본문으로 지정
     };

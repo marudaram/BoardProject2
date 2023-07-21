@@ -9,7 +9,7 @@
           style="float:left; marginRight:10px"
           v-model="searchKeyword"
         ></v-text-field>
-        <v-btn variant="tonal" @click="getBoardList" style="float:left">
+        <v-btn variant="tonal" style="float:left">
           검색
         </v-btn>
         <v-select
@@ -92,7 +92,12 @@ export default {
       page: 1,
       amount: 10,
       totalElements: 0,
-      totalPages: 0
+      totalPages: 0,
+
+      //검색 관련
+      searchOption: ["CONTENT", "TITLE", "ID"], // 검색 옵션
+      searchKeyword: "", //검색 키워드
+      searchOptionSelected: "CONTENT" //검색 옵션값 받아오기, 기본값은 본문으로 지정
     };
   },
   computed: {
