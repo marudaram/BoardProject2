@@ -45,15 +45,18 @@ export default {
     toBoardList() {
       const path = `/boardList`;
       if (this.$route.path !== path) this.$router.push(path);
+      window.location.reload(true);
     },
     toMyPage() {
       const id = this.id;
       const path = `/myBoard/${id}`;
       if (this.$route.path !== path) this.$router.push(path);
+      window.location.reload(true);
     },
     toWriting() {
       const path = `/boardWrite`;
       if (this.$router.path !== path) this.$router.push(path);
+      window.location.reload(true);
     }
   },
   beforeCreate() {}

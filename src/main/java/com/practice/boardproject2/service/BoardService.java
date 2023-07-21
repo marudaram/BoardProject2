@@ -41,24 +41,24 @@ public class BoardService {
 
         PageRequest pageRequest = PageRequest.of(param.getPage(), param.getAmount(), Sort.by("boardNum").descending());
 
-        Specification<Board> spec;
+        Specification<Board> spec = null;
         switch (param.getSearchOption()) {
             case TITLE:
                 spec = BoardSpecification.withTitle(param.getKeyword());
                 break;
             case CONTENT:
                 spec = BoardSpecification.withContent(param.getKeyword());
-
                 break;
             case ID:
                 spec = BoardSpecification.withId(param.getKeyword());
-
                 break;
             default:
-                spec = BoardSpecification.withContent(param.getKeyword());
+                spec = null;
         }
 
-        Page<Board> page = boardRepository.findAll(spec, pageRequest);
+        Page<Board> page = spec == null ?
+                boardRepository.findAll(pageRequest) :
+                boardRepository.findAll(spec, pageRequest);
         return new PageImpl<>(page.map(this::toDto).toList(), page.getPageable(), page.getTotalElements());
 
     }

@@ -95,9 +95,9 @@ export default {
       totalPages: 0,
 
       //검색 관련
-      searchOption: ["CONTENT", "TITLE", "ID"], // 검색 옵션
+      searchOption: ["SELECT", "TITLE", "CONTENT", "ID"], // 검색 옵션
       searchKeyword: "", //검색 키워드
-      searchOptionSelected: "CONTENT" //검색 옵션값 받아오기, 기본값은 본문으로 지정
+      searchOptionSelected: "SELECT" //검색 옵션값 받아오기, 기본값은 본문으로 지정
     };
   },
   computed: {
@@ -153,9 +153,9 @@ export default {
         this.totalElements = totalElements;
         this.totalPages = totalPages;
 
-        if (this.$route.path !== `/boardList`) {
-          this.$router.push(`/boardList`);
-        }
+        // if (this.$route.path !== `/boardList`) {
+        //   this.$router.push(`/boardList`);
+        // }
       }
     },
     detail(idx) {
