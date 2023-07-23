@@ -59,8 +59,8 @@ public class BoardController {
 
     //내가 쓴 게시글 불러오기
     @GetMapping("/myBoard/{id}")
-    public Page<BoardResponseDTO> myBoardList(@PathVariable("id") String id, Criteria cri) {
-        Page<BoardResponseDTO> myBoardList = boardService.getMyBoardList(id, cri);
+    public Page<BoardResponseDTO> myBoardList(@PathVariable("id") String id, BoardSearchDTO param) {
+        Page<BoardResponseDTO> myBoardList = boardService.getMyBoardList(id, param);
         return myBoardList;
     }
 

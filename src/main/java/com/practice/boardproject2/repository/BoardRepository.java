@@ -21,12 +21,14 @@ public interface BoardRepository extends JpaRepository<Board, Integer>, JpaSpeci
     @Query(value = "update Board b set b.hit=b.hit+1 where b.boardNum=:boardNum")
     void increaseHit(@Param("boardNum") Integer boardNum);
 
-    List<Board> findById(@Param("id") String id);
-
     void deleteById(@PathVariable("boardNum") Integer boardNum);
 
 
-    Page<Board> findAllById(@PathVariable("String id") String id, Pageable pageable);
+    Page<Board> findAllById(@PathVariable("id") String id, Pageable pageable);
+
+//    Page<Board> findAll(@PathVariable("id") String id, Pageable pageable, Specification spec2);
+
+
 
 
 }

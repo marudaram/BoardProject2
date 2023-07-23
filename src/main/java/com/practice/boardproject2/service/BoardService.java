@@ -41,7 +41,7 @@ public class BoardService {
 
         PageRequest pageRequest = PageRequest.of(param.getPage(), param.getAmount(), Sort.by("boardNum").descending());
 
-        Specification<Board> spec = null;
+        Specification<Board> spec;
         switch (param.getSearchOption()) {
             case TITLE:
                 spec = BoardSpecification.withTitle(param.getKeyword());
@@ -94,11 +94,25 @@ public class BoardService {
 
     //내가 쓴 게시글 가져오기
     @Transactional
-    public Page<BoardResponseDTO> getMyBoardList(String id, Criteria cri) {
-        PageRequest pageRequest = PageRequest.of(cri.getPage(), cri.getAmount(), Sort.by("boardNum").descending());
-        Page<Board> myBoardPage = boardRepository.findAllById(id, pageRequest);
-        List<BoardResponseDTO> dtoList = myBoardPage.stream().map(this::toDto).collect(Collectors.toList());
-        return new PageImpl<>(dtoList, myBoardPage.getPageable(), myBoardPage.getTotalElements());
+    public Page<BoardResponseDTO> getMyBoardList(String id, BoardSearchDTO param) {
+        PageRequest pageRequest = PageRequest.of(param.getPage(), param.getAmount(), Sort.by("boardNum").descending());
+
+        Specification<Board> spec2;
+        switch (param.getSearchOption()) {
+            case TITLE:
+                spec2 = BoardSpecification.withTitle(param.getKeyword());
+                break;
+            case CONTENT:
+                spec2 = BoardSpecification.withContent(param.getKeyword());
+                break;
+            default:
+                spec2 = null;
+        }
+
+        Page<Board> page = spec2 != null ?
+                boardRepository.findAllById(id, pageRequest) :
+                boardRepository.findAll(spec2, pageRequest);
+        return new PageImpl<>(page.map(this::toDto).toList(), page.getPageable(), page.getTotalElements());
     }
 
     @Transactional
