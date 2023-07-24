@@ -1,5 +1,5 @@
 <template>
-  <v-container style="position:relative">
+  <v-container style="position:relative; ">
     <v-col style="textAlign:center">
       <div style="marginBottom:100px">
         <v-text-field
@@ -9,7 +9,11 @@
           style="float:left; marginRight:10px"
           v-model="searchKeyword"
         ></v-text-field>
-        <v-btn variant="tonal" @click="getBoardList" style="float:left">
+        <v-btn
+          variant="tonal"
+          @click="getBoardList"
+          style="float:left; backgroundColor:rgb(6, 58, 81); color:white;"
+        >
           검색
         </v-btn>
         <v-select
@@ -18,33 +22,33 @@
           style="float:left"
           v-model="searchOptionSelected"
         ></v-select>
+        <v-btn
+          class="writeBtn"
+          variant="tonal"
+          @click="toBoardWrite"
+          style="backgroundColor:rgb(6, 58, 81); color:white"
+        >
+          글 등록
+        </v-btn>
       </div>
-
-      <v-btn
-        variant="tonal"
-        @click="toBoardWrite"
-        style="display:block; position:absolute; top:2%; left: 90%"
-      >
-        글 등록
-      </v-btn>
 
       <!-- 테이블 타이틀부분 -->
       <v-simple-table style="marginTop:30px; position:relative">
-        <thead>
+        <thead style="backgroundColor:rgb(169, 212, 244)">
           <tr>
-            <th class="text-left no" style="paddingLeft:2%">
+            <th class="text-left no" style="paddingLeft:3%">
               No
             </th>
-            <th class="text-left subject" style="width:40%; paddingLeft:18%">
+            <th class="text-left subject" style="width:40%; paddingLeft:19%">
               제목
             </th>
-            <th class="text-left" style="paddingLeft:60px">
+            <th class="text-left" style="paddingLeft:8%">
               작성자
             </th>
-            <th class="text-left" style=" paddingLeft:13%">
+            <th class="text-left" style=" paddingLeft:11%">
               날짜
             </th>
-            <th class="text-left" style="paddingLeft: 2%">
+            <th class="text-left" style="paddingLeft: 3%">
               조회수
             </th>
           </tr>
@@ -66,6 +70,19 @@
       </v-simple-table>
     </v-col>
     <v-col>
+      <v-btn
+        variant="tonal"
+        style="backgroundColor:rgb(6, 58, 81); color:white"
+      >
+        목록으로
+      </v-btn>
+      <v-btn
+        variant="tonal"
+        @click="toBoardWrite"
+        style="backgroundColor:rgb(6, 58, 81); color:white"
+      >
+        글 등록
+      </v-btn>
       <!-- 페이지네이션 부분 -->
       <v-pagination
         v-model="page"
@@ -186,13 +203,6 @@ export default {
   position: relative;
 }
 
-.wrapBox2 .writeBtn {
-  width: 70px;
-  float: right;
-
-  margin-right: 15px;
-}
-
 .wrapBox2 .searchArea {
   width: 250px;
   height: 90px;
@@ -207,7 +217,8 @@ export default {
 }
 
 .selectBox {
-  border: 1px solid lightgray;
+  border: 1px solid lightgrey;
+
   float: right;
   text-align: center;
   margin-top: 10px;

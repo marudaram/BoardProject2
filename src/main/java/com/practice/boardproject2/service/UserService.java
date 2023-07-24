@@ -25,15 +25,9 @@ public class UserService {
 
         //사용자 정보가 없을 경우 실패 처리
         if(findUser == null || !findUser.get().getPassword().equals(userDTO.getPassword())) {
-
+            System.out.println("비밀번호가 다름");
             return false;
         }
-
-        //비밀번호 비교
-//        if() {
-//            System.out.println("비밀번호가 다름");
-//            return false;
-//        }
 
         return true;
     }

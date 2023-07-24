@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <v-col>
-      <div style="marginBottom:100px">
+    <v-col style="textAlign:center">
+      <div style="height: 70px">
         <v-text-field
           hide-details
           prepend-icon="mdi-magnify"
@@ -9,7 +9,11 @@
           style="float:left; marginRight:10px"
           v-model="searchKeyword"
         ></v-text-field>
-        <v-btn variant="tonal" @click="getMyBoardList" style="float:left">
+        <v-btn
+          variant="tonal"
+          @click="getMyBoardList"
+          style="float:left; backgroundColor:rgb(6, 58, 81); color:white"
+        >
           검색
         </v-btn>
         <v-select
@@ -18,30 +22,31 @@
           style="float:left"
           v-model="searchOptionSelected"
         ></v-select>
+        <v-btn
+          variant="tonal"
+          @click="toBoardWrite"
+          class="writeBtn"
+          style="backgroundColor:rgb(6, 58, 81); color:white"
+        >
+          글 등록
+        </v-btn>
       </div>
-      <v-btn
-        variant="tonal"
-        @click="toBoardWrite"
-        style="display:block; position:absolute; top:2%; left: 90%"
-      >
-        글 등록
-      </v-btn>
       <v-simple-table style="marginTop:30px">
-        <thead>
+        <thead style="backgroundColor:rgb(169, 212, 244)">
           <tr>
-            <th class="text-left no">
+            <th class="text-left no" style="paddingLeft:3%">
               No
             </th>
-            <th class="text-left subject">
+            <th class="text-left subject" style="width:40%; paddingLeft:19%">
               제목
             </th>
-            <th class="text-left">
+            <th class="text-left" style="paddingLeft:8%">
               작성자
             </th>
-            <th class="text-left">
+            <th class="text-left" style=" paddingLeft:11%">
               날짜
             </th>
-            <th class="text-left">
+            <th class="text-left" style="paddingLeft: 3%">
               조회수
             </th>
           </tr>
@@ -52,17 +57,26 @@
             <td @click="detail(row.boardNum)">{{ row.boardNum }}</td>
             <td @click="detail(row.boardNum)">{{ row.title }}</td>
             <td @click="detail(row.boardNum)">{{ row.id }}</td>
-            <td @click="detail(row.boardNum)">{{ row.regDate }}</td>
+            <td @click="detail(row.boardNum)">
+              {{ $moment(row.regDate).format("YYYY-MM-DD HH:MM") }}
+            </td>
             <td @click="detail(row.boardNum)">{{ row.hit }}</td>
           </tr>
         </tbody>
       </v-simple-table>
     </v-col>
     <v-col>
-      <v-btn variant="tonal">
+      <v-btn
+        variant="tonal"
+        style="backgroundColor:rgb(6, 58, 81); color:white"
+      >
         목록으로
       </v-btn>
-      <v-btn variant="tonal" @click="toBoardWrite">
+      <v-btn
+        variant="tonal"
+        @click="toBoardWrite"
+        style="backgroundColor:rgb(6, 58, 81); color:white"
+      >
         글 등록
       </v-btn>
 
@@ -166,3 +180,9 @@ export default {
   }
 };
 </script>
+
+<style>
+header {
+  background-color: rgb(169, 212, 244);
+}
+</style>

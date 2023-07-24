@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar class="px-3" color="white" flat density="compact">
+    <v-app-bar class="px-3" color="light-gray" flat density="compact">
       <v-avatar color="grey-darken-1" size="32"></v-avatar>
 
       <v-spacer></v-spacer>
@@ -63,7 +63,4 @@ export default {
 };
 </script>
 
-<style>
-.header {
-}
-</style>
+<style></style>

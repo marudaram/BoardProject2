@@ -1,21 +1,28 @@
 <template>
   <div>
+    <!-- 제목부분 -->
     <div class="titleArea">
       <v-card>
         <v-responsive :aspect-ratio="18 / 1">
-          <v-card-text style="fontSize: 25px; lineHeight: 30px">
+          <v-card-text
+            style="fontSize: 25px; lineHeight: 30px; backgroundColor:rgb(169, 212, 244); color:white"
+          >
             {{ boardDetailData.title }}
           </v-card-text>
         </v-responsive>
       </v-card>
     </div>
+    <!-- 작성정보 부분 -->
     <div>
       <v-card>
         <v-responsive :aspect-ratio="20 / 7">
           <v-input
             error-count="3"
             :error-messages="[
-              '날짜: ' + this.boardDetailData.regDate,
+              '날짜: ' +
+                $moment(this.boardDetailData.regDate).format(
+                  'YYYY-MM-DD HH:MM'
+                ),
               '조회수: ' + this.boardDetailData.hit,
               '작성자: ' + this.boardDetailData.id
             ]"
@@ -24,6 +31,7 @@
             class="writingInfo"
           >
           </v-input>
+          <!-- 내용부분 -->
           <v-card-text
             v-html="boardDetailData.content"
             style="marginTop:100px;"
@@ -31,19 +39,20 @@
         </v-responsive>
       </v-card>
     </div>
-    <div>
-      <v-card>
-        <v-responsive :aspect-ratio="10 / 1">
-          <v-card-text> </v-card-text>
-        </v-responsive>
-      </v-card>
-    </div>
+    <!-- 글 관련 버튼 -->
     <div class="btnBox">
-      <v-btn variant="tonal" @click="toBoardList"> 목록으로 </v-btn>
+      <v-btn
+        variant="tonal"
+        @click="toBoardList"
+        style="backgroundColor:rgb(6, 58, 81); color:white"
+      >
+        목록으로
+      </v-btn>
       <v-btn
         variant="tonal"
         @click="boardDelete"
         v-if="sessionId === boardDetailData.id"
+        style="backgroundColor:rgb(6, 58, 81); color:white"
       >
         삭제
       </v-btn>
@@ -51,10 +60,12 @@
         variant="tonal"
         @click="modifyBoard"
         v-if="sessionId === boardDetailData.id"
+        style="backgroundColor:rgb(6, 58, 81); color:white"
       >
         수정
       </v-btn>
     </div>
+    <!-- 댓글 작성하는 부분 -->
     <div>
       <v-row cols="auto" sm="12">
         <div class="commentMiniBox">
@@ -70,74 +81,85 @@
           v-model="commentDetailData.comContent"
         ></v-textarea>
 
+        <!-- 댓글 작성 버튼 -->
         <v-btn
           variant="tonal"
           @click="comSubmit"
-          style="marginLeft:95%; marginBottom:20px;"
+          style="marginLeft:95%; marginBottom:20px; backgroundColor:rgb(6, 58, 81); color:white"
         >
           작성
         </v-btn>
       </v-row>
 
+      <!-- 쓴 댓글 나오는 부분 -->
       <v-row
+        id="readMode"
         cols="auto"
         sm="12"
         v-for="(row, index) in commentDetailData"
         :key="index"
       >
+        <!-- 댓쓴이 -->
         <div class="commentMiniBox">
-          <p class="commentTitle">{{ row.comWriter }}</p>
+          <p class="commentTitle">
+            {{ row.comWriter }}
+          </p>
         </div>
-        <div class="writtenComment" v-html="row.comContent"></div>
+        <!-- 댓글내용 -->
+        <div
+          class="writtenComment"
+          id=""
+          v-html="row.comContent"
+          v-if="row.readMode"
+        ></div>
+        <!-- 수정버튼 누른 후 수정할 때 -->
+        <v-textarea
+          label="댓글 수정"
+          filled
+          auto-grow
+          rows="4"
+          row-height="30"
+          v-model="row.comContent"
+          v-else
+        >
+        </v-textarea>
+        <!-- 댓글 읽기 모드일 때 -->
         <div class="commentInfoBox">
           <v-input
             error-count="3"
-            :error-messages="row.regDate"
+            :error-messages="$moment(row.regDate).format('YYYY-MM-DD HH:MM')"
             error
             disabled
             class="writingInfo"
+            v-if="row.readMode"
           >
           </v-input>
-          <div class="btnBox">
-            <v-layout row justify-center>
-              <button @click.stop="row.showModal = true">
-                수정
-              </button>
+          <!-- 수정하기 모드일 때 버튼 -->
+          <div class="btnBox1">
+            <button
+              v-if="!row.readMode"
+              class="modiBtn1"
+              @click="cancelBtn(row)"
+            >
+              취소
+            </button>
 
-              <v-dialog v-model="row.showModal" persistent max-width="1000px">
-                <v-card>
-                  <v-card-title class="headline">댓글 수정</v-card-title>
-
-                  <div class="commentMiniBox">
-                    <p class="commentTitle">{{ row.comWriter }}</p>
-                  </div>
-                  <v-textarea
-                    style="width:80%"
-                    label="댓글 작성"
-                    filled
-                    auto-grow
-                    rows="4"
-                    row-height="30"
-                    v-model="row.comContent"
-                  ></v-textarea>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-
-                    <v-btn
-                      color="green darken-1"
-                      @click="row.showModal = false"
-                    >
-                      취소
-                    </v-btn>
-
-                    <v-btn color="green darken-1" @click="comModifyBtn(row)">
-                      수정하기
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-layout>
-            <button @click="comDeleteBtn(row.comNum)">삭제</button>
+            <button
+              v-if="!row.readMode"
+              class="modiBtn2"
+              @click="comModifyBtn(row)"
+            >
+              수정하기
+            </button>
+          </div>
+          <!-- 읽기 모드일 때 버튼 -->
+          <div class="btnBox2">
+            <button @click="comDeleteBtn(row.comNum)" v-if="row.readMode">
+              삭제
+            </button>
+            <button @click="wantToModifyBtn(row)" v-if="row.readMode">
+              수정
+            </button>
           </div>
         </div>
       </v-row>
@@ -160,7 +182,6 @@ export default {
         hit: ""
       },
       commentDetailData: []
-      // dialog: false
     };
   },
   beforeCreate() {
@@ -182,13 +203,12 @@ export default {
       .then(res => {
         this.commentDetailData = res.data.map(d => {
           console.log(" ==>> ", d.comWriter);
+          d.readMode = "true";
           return {
-            ...d,
-            showModal: false
+            ...d
           };
         });
-        console.log(res.data, this.commentDetailData);
-        console.log("댓작성자" + this.commentDetailData[0].comWriter);
+        console.log(res.data);
       })
       .catch(error => {
         console.log(error);
@@ -241,8 +261,6 @@ export default {
         });
     },
     comDeleteBtn(comNum) {
-      console.log("컴넘은?" + comNum);
-
       if (confirm("삭제하시겠습니까?")) {
         this.$axios
           .get(`/comment/comDelete`, {
@@ -268,15 +286,28 @@ export default {
           comContent: comment.comContent
         })
         .then(res => {
-          const { data } = res;
-          const { boardNum, comContent, comNum, comWriter, id, regDate } = data;
-          comment.boardNum = boardNum;
-          comment.comContent = comContent;
-          comment.comNum = comNum;
-          comment.comWriter = comWriter;
-          comment.id = id;
-          comment.regDate = regDate;
-          comment.showModal = false;
+          const { status, data } = res;
+
+          if (status == 200) {
+            confirm("수정하시겠습니까?");
+            const {
+              boardNum,
+              comContent,
+              comNum,
+              comWriter,
+              id,
+              regDate
+            } = data;
+            console.log("데이터:" + data);
+            comment.boardNum = boardNum;
+            comment.comContent = comContent;
+            comment.comNum = comNum;
+            comment.comWriter = comWriter;
+            comment.id = id;
+            comment.regDate = regDate;
+            comment.showModal = false;
+            comment.readMode = true;
+          }
         });
     },
     comLoad() {
@@ -288,11 +319,16 @@ export default {
             ...d
           }));
           console.log(res.data);
-          console.log("댓작성자" + this.commentDetailData[0].comWriter);
         })
         .catch(error => {
           console.log(error);
         });
+    },
+    wantToModifyBtn(row) {
+      row.readMode = false;
+    },
+    cancelBtn(row) {
+      row.readMode = true;
     }
   }
 };
@@ -320,16 +356,17 @@ button {
 }
 
 .commentMiniBox {
-  background-color: lightgray;
+  background-color: rgb(169, 212, 244);
   height: 145px;
   width: 190px;
   float: left;
-  border: 1px solid gray;
+  border: 1px solid rgb(169, 212, 244);
 }
 
 .commentMiniBox .commentTitle {
   text-align: center;
   margin-top: 30%;
+  color: white;
 }
 
 .writtenComment {
@@ -349,5 +386,6 @@ button {
 .commentInfoBox button {
   font-size: 10px;
   color: gray;
+  margin-right: 30px;
 }
 </style>

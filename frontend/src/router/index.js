@@ -4,7 +4,7 @@ import BoardWrite from "@/views/BoardWrite.vue";
 import BoardDetail from "@/views/BoardDetail.vue";
 import BoardModify from "@/views/BoardModify.vue";
 import MyBoard from "@/views/MyBoard.vue";
-import BoardDetailPrac from "@/views/BoardDetailPrac.vue";
+
 import Vue from "vue";
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
@@ -60,12 +60,6 @@ const routes = [
         component: MyBoard
       }
     ]
-  },
-  {
-    //댓글 연습용
-    path: "/boardDetailPrac/:boardNum",
-    name: "boardDetailPrac",
-    component: BoardDetailPrac
   }
 ];
 

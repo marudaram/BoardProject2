@@ -97,21 +97,22 @@ public class BoardService {
     public Page<BoardResponseDTO> getMyBoardList(String id, BoardSearchDTO param) {
         PageRequest pageRequest = PageRequest.of(param.getPage(), param.getAmount(), Sort.by("boardNum").descending());
 
-        Specification<Board> spec2;
+        Specification<Board> spec2 = BoardSpecification.withId(id);
         switch (param.getSearchOption()) {
             case TITLE:
-                spec2 = BoardSpecification.withTitle(param.getKeyword());
+                spec2 = spec2.and(BoardSpecification.withTitle(param.getKeyword())) ;
                 break;
             case CONTENT:
-                spec2 = BoardSpecification.withContent(param.getKeyword());
+                spec2 = spec2.and(BoardSpecification.withContent(param.getKeyword()));
                 break;
             default:
                 spec2 = null;
         }
 
-        Page<Board> page = spec2 != null ?
+        Page<Board> page = spec2 == null ?
                 boardRepository.findAllById(id, pageRequest) :
                 boardRepository.findAll(spec2, pageRequest);
+
         return new PageImpl<>(page.map(this::toDto).toList(), page.getPageable(), page.getTotalElements());
     }
 

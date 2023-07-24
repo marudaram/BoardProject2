@@ -26,7 +26,6 @@ public interface BoardRepository extends JpaRepository<Board, Integer>, JpaSpeci
 
     Page<Board> findAllById(@PathVariable("id") String id, Pageable pageable);
 
-//    Page<Board> findAll(@PathVariable("id") String id, Pageable pageable, Specification spec2);
 
 
 
