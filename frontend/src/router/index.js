@@ -1,4 +1,5 @@
 import SignIn from "@/views/SignIn.vue";
+import SignUp from "@/views/SignUp.vue";
 import BoardList from "@/views/BoardList.vue";
 import BoardWrite from "@/views/BoardWrite.vue";
 import BoardDetail from "@/views/BoardDetail.vue";
@@ -15,6 +16,12 @@ const routes = [
     path: "/",
     name: "SignIn",
     component: SignIn
+  },
+  {
+    //회원가입 화면
+    path: "/signUp",
+    name: "signUp",
+    component: SignUp
   },
   {
     //게시판 리스트

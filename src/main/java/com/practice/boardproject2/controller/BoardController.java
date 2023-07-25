@@ -53,9 +53,10 @@ public class BoardController {
     }
 
     //게시글 삭제하기
-    @PostMapping(value = "/detail/{boardNum}")
-    public void delete(@PathVariable("boardNum") Integer boardNum) {
+    @DeleteMapping(value = "/detail/{boardNum}")
+    public ResponseEntity delete(@PathVariable("boardNum") Integer boardNum) {
         boardService.delete(boardNum);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     //내가 쓴 게시글 불러오기

@@ -15,7 +15,7 @@
         <v-tab @click="toWriting">
           <p>Writing</p>
         </v-tab>
-        <v-tab>
+        <v-tab @click="logOut">
           <p>Logout</p>
         </v-tab>
       </v-tabs>
@@ -57,6 +57,10 @@ export default {
       const path = `/boardWrite`;
       if (this.$router.path !== path) this.$router.push(path);
       window.location.reload(true);
+    },
+    logOut() {
+      sessionStorage.clear();
+      this.$router.push(`/`);
     }
   },
   beforeCreate() {}

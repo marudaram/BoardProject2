@@ -226,24 +226,23 @@ export default {
         }
       });
     },
-    boardDelete() {
+    async boardDelete() {
       const boardNum = this.$route.params.boardNum;
       if (confirm("삭제하시겠습니까?")) {
-        this.$axios
-          .post(`board/detail/${boardNum}`, {
-            boardNum: this.$route.params.boardNum
-          })
+        await this.$axios
+          .delete(`/board/detail/${boardNum}`)
           .then(res => {
+            console.log("목록으로 이동 시작", res);
             this.$router.push(`/boardList`);
-            console.log(res.data);
+            console.log("목록으로 이동 끝");
           })
           .catch(error => {
             console.log(error);
           });
       }
     },
-    comSubmit() {
-      this.$axios
+    async comSubmit() {
+      await this.$axios
         .post("/comment/comSave", {
           comWriter: JSON.parse(sessionStorage.getItem("sessionId")),
           comContent: this.commentDetailData.comContent,
@@ -259,9 +258,9 @@ export default {
           console.log(error);
         });
     },
-    comDeleteBtn(comNum) {
+    async comDeleteBtn(comNum) {
       if (confirm("삭제하시겠습니까?")) {
-        this.$axios
+        await this.$axios
           .get(`/comment/comDelete`, {
             params: { comNum: comNum }
           })
@@ -276,10 +275,10 @@ export default {
           });
       }
     },
-    comModifyBtn(comment) {
+    async comModifyBtn(comment) {
       const comNum = comment.comNum;
 
-      this.$axios
+      await this.$axios
         .put(`/comment/comModify/${comNum}`, {
           comWriter: comment.comWriter,
           comContent: comment.comContent
@@ -309,9 +308,9 @@ export default {
           }
         });
     },
-    comLoad() {
+    async comLoad() {
       const boardNum = this.boardDetailData.boardNum;
-      this.$axios
+      await this.$axios
         .get(`/comment/comList/${boardNum}`)
         .then(res => {
           this.commentDetailData = res.data.map(d => {

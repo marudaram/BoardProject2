@@ -7,6 +7,7 @@ import VueResource from "vue-resource";
 import session from "vue-session";
 import store from "@/assets/store";
 import moment from "moment";
+import Vuex from "vuex";
 
 Vue.config.productionTip = false;
 Vue.prototype.$session = session;
@@ -18,6 +19,7 @@ new Vue({
   router,
   store,
   moment,
+  Vuex,
   render: h => h(App)
 }).$mount("#app");
 

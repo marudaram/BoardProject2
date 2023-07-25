@@ -12,6 +12,7 @@
         label="password"
         counter
         @click:append="show1 = !show1"
+        v-model="userInfo.password"
       ></v-text-field>
     </v-card-text>
     <v-card-actions>
@@ -42,16 +43,15 @@ export default defineComponent({
       show2: true,
       show3: false,
       show4: false,
-      password: "Password",
       rules: {
         required: value => !!value || "Required."
       }
     };
   },
   methods: {
-    logIn() {
+    async logIn() {
       console.log("로그인버튼클릭");
-      this.$axios
+      await this.$axios
         .post(`/user/logIn`, {
           id: this.userInfo.id,
           password: this.userInfo.password

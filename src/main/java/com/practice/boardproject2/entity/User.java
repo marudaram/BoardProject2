@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Builder
@@ -19,7 +16,6 @@ import javax.persistence.Table;
 public class User {
 
     @Id
-    @Column(length = 30)
     private String id;
 
     @Column(length = 100)

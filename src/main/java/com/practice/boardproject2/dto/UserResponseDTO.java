@@ -1,15 +1,13 @@
 package com.practice.boardproject2.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class UserDTO {
+@Setter
+public class UserResponseDTO {
 
     private String id;
     private String password;
