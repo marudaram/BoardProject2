@@ -48,6 +48,12 @@ public class Board {
         this.regDate = new Date();
     }
 
+    public int increaseHit() {
+        return this.hit++;
+    }
+
+
+
     //댓글이랑 join
 //    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 //    @JoinColumn(name = "boardNum")

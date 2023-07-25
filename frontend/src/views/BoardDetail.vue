@@ -93,7 +93,6 @@
 
       <!-- 쓴 댓글 나오는 부분 -->
       <v-row
-        id="readMode"
         cols="auto"
         sm="12"
         v-for="(row, index) in commentDetailData"
@@ -184,7 +183,7 @@ export default {
       commentDetailData: []
     };
   },
-  beforeCreate() {
+  mounted() {
     console.log(JSON.parse(sessionStorage.getItem("sessionId")));
     const boardNum = this.$route.params.boardNum;
     this.$axios
@@ -315,9 +314,12 @@ export default {
       this.$axios
         .get(`/comment/comList/${boardNum}`)
         .then(res => {
-          this.commentDetailData = res.data.map(d => ({
-            ...d
-          }));
+          this.commentDetailData = res.data.map(d => {
+            d.readMode = "true";
+            return {
+              ...d
+            };
+          });
           console.log(res.data);
         })
         .catch(error => {

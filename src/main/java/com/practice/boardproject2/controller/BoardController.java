@@ -9,12 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.List;
 
-@RestController
+
+@Controller
 @RequestMapping("/board")
 public class BoardController {
 
@@ -23,29 +24,29 @@ public class BoardController {
 
     //게시글 저장
     @PostMapping(value = "/save")
-    public BoardResponseDTO save(@RequestBody BoardRequestDTO boardRequestDTO) {
+    public @ResponseBody ResponseEntity<BoardResponseDTO> save(@RequestBody BoardRequestDTO boardRequestDTO) {
         Date date = new Date();
         boardRequestDTO.setRegDate(date);
-        return boardService.save(boardRequestDTO);
+        return new ResponseEntity<>(boardService.save(boardRequestDTO), HttpStatus.OK);
     }
 
     //게시판 리스트 -restcontroller확인
     @GetMapping("/list")
-    public Page<BoardResponseDTO> list(BoardSearchDTO param) {
+    public @ResponseBody ResponseEntity<Page<BoardResponseDTO>> list(BoardSearchDTO param) {
         Page<BoardResponseDTO> boardList =  boardService.getBoardList(param);
-        return boardList;
+        return new ResponseEntity<>(boardList, HttpStatus.OK);
     }
 
     //게시글 디테일
     @GetMapping(value = "/detail/{boardNum}")
-    public ResponseEntity<BoardResponseDTO> read(@PathVariable("boardNum") Integer boardNum) {
-        boardService.increaseHit(boardNum);
+    public @ResponseBody ResponseEntity<BoardResponseDTO> read(@PathVariable("boardNum") Integer boardNum) {
+
         return new ResponseEntity<>(boardService.read(boardNum), HttpStatus.OK);
     }
 
     //게시글 수정하기
     @PutMapping("/detail/{boardNum}")
-    public ResponseEntity<BoardResponseDTO> modify(@PathVariable("boardNum") Integer boardNum,
+    public @ResponseBody ResponseEntity<BoardResponseDTO> modify(@PathVariable("boardNum") Integer boardNum,
                                                    @RequestBody BoardRequestDTO boardRequestDTO) {
         boardRequestDTO.setBoardNum(boardNum);
         return new ResponseEntity<>(boardService.modify(boardRequestDTO), HttpStatus.OK);
@@ -59,9 +60,9 @@ public class BoardController {
 
     //내가 쓴 게시글 불러오기
     @GetMapping("/myBoard/{id}")
-    public Page<BoardResponseDTO> myBoardList(@PathVariable("id") String id, BoardSearchDTO param) {
+    public @ResponseBody ResponseEntity<Page<BoardResponseDTO>> myBoardList(@PathVariable("id") String id, BoardSearchDTO param) {
         Page<BoardResponseDTO> myBoardList = boardService.getMyBoardList(id, param);
-        return myBoardList;
+        return new ResponseEntity<>(myBoardList, HttpStatus.OK);
     }
 
 

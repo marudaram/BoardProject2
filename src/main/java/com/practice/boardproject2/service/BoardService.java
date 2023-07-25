@@ -67,15 +67,16 @@ public class BoardService {
     @Transactional
     public BoardResponseDTO read(Integer boardNum) {
         Board board = boardRepository.findById(boardNum).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+        board.increaseHit();
         return toDto(board);
     }
 
     //조회수 증가 - 디테일에 병합
-    @Modifying
-    @Transactional
-    public void increaseHit(Integer boardNum) {
-        boardRepository.increaseHit(boardNum);
-    }
+//    @Modifying
+//    @Transactional
+//    public void increaseHit(Integer boardNum) {
+//        boardRepository.increaseHit(boardNum);
+//    }
 
     //게시글 수정하기 권한체크
     @Transactional

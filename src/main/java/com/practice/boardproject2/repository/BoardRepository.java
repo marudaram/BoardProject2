@@ -17,9 +17,9 @@ import java.util.List;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Integer>, JpaSpecificationExecutor<Board> {
 
-    @Modifying//
-    @Query(value = "update Board b set b.hit=b.hit+1 where b.boardNum=:boardNum")
-    void increaseHit(@Param("boardNum") Integer boardNum);
+//    @Modifying//
+//    @Query(value = "update Board b set b.hit=b.hit+1 where b.boardNum=:boardNum")
+//    void increaseHit(@Param("boardNum") Integer boardNum);
 
     void deleteById(@PathVariable("boardNum") Integer boardNum);
 
