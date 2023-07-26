@@ -43,7 +43,6 @@ public class Board {
     private Integer hit;
 
 
-
     public void changeBoard(String title, String content) {
         this.title = title;
         this.content = content;
@@ -53,7 +52,6 @@ public class Board {
     public int increaseHit() {
         return this.hit++;
     }
-
 
 
     //댓글이랑 join

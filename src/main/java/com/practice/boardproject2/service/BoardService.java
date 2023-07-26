@@ -1,26 +1,19 @@
 package com.practice.boardproject2.service;
-
 import com.practice.boardproject2.dto.BoardRequestDTO;
 import com.practice.boardproject2.dto.BoardResponseDTO;
 import com.practice.boardproject2.dto.BoardSearchDTO;
 import com.practice.boardproject2.entity.Board;
-import com.practice.boardproject2.pagination.Criteria;
 import com.practice.boardproject2.repository.BoardRepository;
 import com.practice.boardproject2.repository.spec.BoardSpecification;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -71,14 +64,7 @@ public class BoardService {
         return toDto(board);
     }
 
-    //조회수 증가 - 디테일에 병합
-//    @Modifying
-//    @Transactional
-//    public void increaseHit(Integer boardNum) {
-//        boardRepository.increaseHit(boardNum);
-//    }
-
-    //게시글 수정하기 권한체크
+    //게시글 수정하기
     @Transactional
     public BoardResponseDTO modify(BoardRequestDTO boardRequestDTO) {
         Board board = boardRepository.findById(boardRequestDTO.getBoardNum())
@@ -87,7 +73,7 @@ public class BoardService {
         return toDto(board);
     }
 
-    //게시글 삭제하기 권한체크
+    //게시글 삭제하기
     @Transactional
     public void delete(Integer boardNum) {
         boardRepository.deleteById(boardNum);
@@ -117,9 +103,6 @@ public class BoardService {
         return new PageImpl<>(page.map(this::toDto).toList(), page.getPageable(), page.getTotalElements());
     }
 
-
-
-
     private BoardResponseDTO toDto(Board board) {
         return BoardResponseDTO.builder()
                 .boardNum(board.getBoardNum())
@@ -130,7 +113,6 @@ public class BoardService {
                 .regDate(board.getRegDate())
                 .build();
     }
-
 
     private Board toEntity(BoardRequestDTO dto) {
         return Board.builder()

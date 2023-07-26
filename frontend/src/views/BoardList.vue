@@ -109,7 +109,7 @@ export default {
         hit: 0
       },
       isLoading: false,
-
+      comTotal: "",
       //페이지 이동에 필요한 초기값
       page: 1,
       amount: 10,
@@ -146,6 +146,7 @@ export default {
       console.log(this.$route.params.criteriaObj);
     }
     this.getBoardList();
+    this.getComTotal;
   },
   methods: {
     toBoardWrite() {
@@ -192,6 +193,13 @@ export default {
         params: {
           criteriaObj: JSON.stringify({ page, amount })
         }
+      });
+    },
+    getComTotal() {
+      const boardNum = this.listData.boardNum;
+      this.$axios.post(`/comment/${boardNum}`).then(res => {
+        this.comTotal = res.data;
+        console.log(res.data);
       });
     }
   }

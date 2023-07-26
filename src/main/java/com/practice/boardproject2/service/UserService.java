@@ -24,15 +24,12 @@ public class UserService {
 
 
         //디비에서 사용자 정보 가져오기
-        Optional<User> findId = userRepository.findById(userRequestDTO.getId());
-        Optional<User> findPw = userRepository.findByPassword(userRequestDTO.getPassword());
+        Optional<User> findId = userRepository.findByIdAndPassword(userRequestDTO.getId(), userRequestDTO.getPassword());
 
         //사용자 정보가 없을 경우 실패 처리
-        if(!findId.get().getId().equals(userRequestDTO.getId())) {
-            System.out.println("아이디가 다름");
-            return false;
-        } else if(!findPw.get().getPassword().equals(userRequestDTO.getPassword())) {
-            System.out.println("비밀번호가 다름");
+        if(!findId.get().getId().equals(userRequestDTO.getId())
+                && !findId.get().getPassword().equals(userRequestDTO.getPassword())) {
+            System.out.println("아이디와 비밀번호가 다름");
             return false;
         } else {
             return true;

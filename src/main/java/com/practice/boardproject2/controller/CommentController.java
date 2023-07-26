@@ -6,12 +6,13 @@ import com.practice.boardproject2.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/comment")
 public class CommentController {
 
@@ -20,30 +21,31 @@ public class CommentController {
 
     //댓글 저장
     @PostMapping("/comSave")
-    public CommentResponseDTO comSave(@RequestBody CommentRequestDTO commentRequestDTO) {
+    public @ResponseBody ResponseEntity<CommentResponseDTO> comSave(@RequestBody CommentRequestDTO commentRequestDTO) {
         commentRequestDTO.setRegDate(new Date());
-        return commentService.comSave(commentRequestDTO);
+        return new ResponseEntity<>(commentService.comSave(commentRequestDTO), HttpStatus.OK) ;
     }
 
     //댓글 리스트
     @GetMapping("/comList/{boardNum}")
-    public List<CommentResponseDTO> myCommentList(@PathVariable("boardNum") Integer boardNum) {
+    public @ResponseBody ResponseEntity<List<CommentResponseDTO>> myCommentList(@PathVariable("boardNum") Integer boardNum) {
         List<CommentResponseDTO> myCommentList = commentService.getMyComments(boardNum);
 
-        return myCommentList;
+        return new ResponseEntity<>(myCommentList, HttpStatus.OK);
     }
 
 
     //댓글 삭제하기
     @GetMapping("/comDelete")
-    public void comDelete(@RequestParam(value = "comNum", required = false) Integer comNum) {
+    public ResponseEntity comDelete(@RequestParam(value = "comNum", required = false) Integer comNum) {
         System.out.println("컴넘?"+comNum);
         commentService.comDelete(comNum);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     //댓글 수정하기
     @PutMapping("/comModify/{comNum}")
-    public ResponseEntity<CommentResponseDTO> comModify(@PathVariable("comNum") Integer comNum,
+    public @ResponseBody ResponseEntity<CommentResponseDTO> comModify(@PathVariable("comNum") Integer comNum,
                                                         @RequestBody CommentRequestDTO commentRequestDTO) {
 
         commentRequestDTO.setComNum(comNum);
@@ -53,12 +55,12 @@ public class CommentController {
 
     //수정한 댓글 가져오기
     @GetMapping("/comDetail")
-    public ResponseEntity<CommentResponseDTO> comDetail(@RequestParam("comNum") Integer comNum) {
+    public @ResponseBody ResponseEntity<CommentResponseDTO> comDetail(@RequestParam("comNum") Integer comNum) {
         return new ResponseEntity<>(commentService.comDetail(comNum), HttpStatus.OK);
     }
 
     //댓글 총 개수
-//    @PostMapping("/getComTotal")
+//    @PostMapping("/getComTotal/{boardNum}")
 //    public ResponseEntity<Integer> getComTotal(@PathVariable("boardNum") Integer boardNum) {
 //        return new ResponseEntity<>(commentService.getComTotal(boardNum), HttpStatus.OK);
 //    }

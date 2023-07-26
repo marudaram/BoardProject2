@@ -69,8 +69,7 @@ export default {
         passwordRule: v =>
           !!(v || "").match(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/
-          ) ||
-          "Password must contain an upper case letter, a numeric character, and a special character",
+          ) || "비밀번호는 대문자, 소문자, 숫자를 포함해야 합니다.",
         nameRule: v => !!v || "이름을 입력해주세요."
       }
     };

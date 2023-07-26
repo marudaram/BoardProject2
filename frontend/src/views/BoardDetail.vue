@@ -209,6 +209,7 @@ export default {
         this.commentDetailData = res.data.map(d => {
           console.log(" ==>> ", d.comWriter);
           d.readMode = "true";
+
           return {
             ...d
           };

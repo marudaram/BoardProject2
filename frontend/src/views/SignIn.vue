@@ -16,13 +16,12 @@
       ></v-text-field>
     </v-card-text>
     <v-card-actions>
-      <v-btn
-        text
-        color="deep-purple accent-4"
-        style="marginLeft:250px"
-        @click="logIn"
-      >
-        LOGIN
+      <v-btn color="deep-purple accent-4" text @click="goToSignUp">
+        Sign Up
+      </v-btn>
+
+      <v-btn color="deep-purple accent-4" text @click="logIn">
+        Sign In
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -70,6 +69,9 @@ export default defineComponent({
           console.log(error);
         })
         .finally(() => console.log("로그인 시도"));
+    },
+    goToSignUp() {
+      this.$router.push(`/SignUp`);
     }
   }
 });
