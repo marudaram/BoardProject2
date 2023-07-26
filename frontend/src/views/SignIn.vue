@@ -64,6 +64,9 @@ export default defineComponent({
           console.log(res);
         })
         .catch(error => {
+          alert("로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
+          window.location.reload(true);
+
           console.log(error);
         })
         .finally(() => console.log("로그인 시도"));

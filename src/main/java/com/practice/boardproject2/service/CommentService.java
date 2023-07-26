@@ -67,6 +67,13 @@ public class CommentService {
         return toDto(comment);
     }
 
+    //댓글 개수 가져오기
+//    @Transactional
+//    public Integer getComTotal(Integer boardNum) {
+//        Integer totalCom = commentRepository.countBy(boardNum);
+//        return totalCom;
+//    }
+
 
     private CommentResponseDTO toDto(Comment comment) {
         return CommentResponseDTO.builder()

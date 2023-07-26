@@ -3,6 +3,7 @@ package com.practice.boardproject2.controller;
 import com.practice.boardproject2.dto.BoardRequestDTO;
 import com.practice.boardproject2.dto.BoardResponseDTO;
 import com.practice.boardproject2.dto.BoardSearchDTO;
+import com.practice.boardproject2.dto.CommentResponseDTO;
 import com.practice.boardproject2.pagination.Criteria;
 import com.practice.boardproject2.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class BoardController {
         return new ResponseEntity<>(boardList, HttpStatus.OK);
     }
 
+
     //게시글 디테일
     @GetMapping(value = "/detail/{boardNum}")
     public @ResponseBody ResponseEntity<BoardResponseDTO> read(@PathVariable("boardNum") Integer boardNum) {
@@ -65,6 +67,7 @@ public class BoardController {
         Page<BoardResponseDTO> myBoardList = boardService.getMyBoardList(id, param);
         return new ResponseEntity<>(myBoardList, HttpStatus.OK);
     }
+
 
 
 

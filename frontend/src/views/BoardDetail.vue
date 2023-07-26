@@ -153,10 +153,16 @@
           </div>
           <!-- 읽기 모드일 때 버튼 -->
           <div class="btnBox2">
-            <button @click="comDeleteBtn(row.comNum)" v-if="row.readMode">
+            <button
+              @click="comDeleteBtn(row.comNum)"
+              v-if="row.readMode && row.comWriter === sessionId"
+            >
               삭제
             </button>
-            <button @click="wantToModifyBtn(row)" v-if="row.readMode">
+            <button
+              @click="wantToModifyBtn(row)"
+              v-if="row.readMode && row.comWriter === sessionId"
+            >
               수정
             </button>
           </div>

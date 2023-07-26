@@ -20,4 +20,6 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     @Query(value = "delete from Comment c where c.comNum=:comNum")
     void comDelete(@Param("comNum") Integer comNum);
 
+//    Integer countBy(@Param("boardNum") Integer boardNum);
+
 }

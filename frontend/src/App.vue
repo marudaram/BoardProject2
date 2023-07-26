@@ -62,8 +62,7 @@ export default {
       sessionStorage.clear();
       this.$router.push(`/`);
     }
-  },
-  beforeCreate() {}
+  }
 };
 </script>
 

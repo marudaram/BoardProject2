@@ -17,4 +17,6 @@ public class BoardSearchDTO {
     private String keyword = "";
     @Builder.Default
     private SearchOption searchOption = SearchOption.CONTENT;
+
+
 }

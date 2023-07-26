@@ -117,8 +117,7 @@ public class BoardService {
         return new PageImpl<>(page.map(this::toDto).toList(), page.getPageable(), page.getTotalElements());
     }
 
-    @Transactional
-    public void deleteMine(Integer boardNum) {boardRepository.deleteById(boardNum);}
+
 
 
     private BoardResponseDTO toDto(Board board) {

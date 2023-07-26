@@ -31,7 +31,8 @@
           글 등록
         </v-btn>
       </div>
-      <v-simple-table style="marginTop:30px">
+      <LoadingSpinner v-if="isLoading" style="marginRight:50%"></LoadingSpinner>
+      <v-simple-table style="marginTop:30px" v-else>
         <thead style="backgroundColor:rgb(169, 212, 244)">
           <tr>
             <th class="text-left no" style="paddingLeft:3%">
@@ -91,7 +92,11 @@
 </template>
 
 <script>
+import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
 export default {
+  components: {
+    LoadingSpinner
+  },
   data() {
     return {
       myListData: {
@@ -101,6 +106,7 @@ export default {
         regDate: "",
         hit: 0
       },
+      isLoading: false,
 
       //페이지 이동에 필요한 초기값
       page: 1,
@@ -152,6 +158,7 @@ export default {
       this.$router.push("/boardWrite");
     },
     async getMyBoardList() {
+      this.isLoading = true;
       const id = JSON.parse(sessionStorage.getItem("sessionId"));
       const { status, data } = await this.$axios.get(`/board/myBoard/${id}`, {
         params: {
@@ -163,6 +170,7 @@ export default {
       });
 
       if (status == 200) {
+        this.isLoading = false;
         const {
           content: list,
           number: page,

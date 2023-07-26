@@ -57,4 +57,10 @@ public class CommentController {
         return new ResponseEntity<>(commentService.comDetail(comNum), HttpStatus.OK);
     }
 
+    //댓글 총 개수
+//    @PostMapping("/getComTotal")
+//    public ResponseEntity<Integer> getComTotal(@PathVariable("boardNum") Integer boardNum) {
+//        return new ResponseEntity<>(commentService.getComTotal(boardNum), HttpStatus.OK);
+//    }
+
 }

@@ -25,4 +25,3 @@ new Vue({
 
 Vue.use(VueResource);
 Vue.use(store);
-// App.config.globalProperties.$axios = axios;
