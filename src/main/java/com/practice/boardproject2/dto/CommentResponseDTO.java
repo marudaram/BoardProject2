@@ -10,7 +10,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class CommentResponseDTO {
-
     private Integer comNum;
     private String id;
     private String comWriter;

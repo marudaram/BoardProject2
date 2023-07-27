@@ -76,3 +76,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style>
+.mx-auto {
+  margin: 0 auto;
+}
+</style>

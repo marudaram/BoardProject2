@@ -13,13 +13,11 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
     //댓글 리스트
+    @Query("SELECT c FROM Comment c WHERE c.board.boardNum = :boardNum")
     List<Comment> findByBoardNum(@Param("boardNum") Integer boardNum);
 
     //댓글 삭제하기
     @Modifying
     @Query(value = "delete from Comment c where c.comNum=:comNum")
     void comDelete(@Param("comNum") Integer comNum);
-
-//    Integer countBy(@Param("boardNum") Integer boardNum);
-
 }

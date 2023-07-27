@@ -74,7 +74,6 @@
 
         <v-textarea
           filled
-          auto-grow
           label="댓글 작성"
           rows="4"
           row-height="30"
@@ -106,6 +105,7 @@
         </div>
         <!-- 댓글내용 -->
         <div
+          style="paddingTop:30px; paddingLeft:20px; white-space:pre; overflow:auto;"
           class="writtenComment"
           id=""
           v-html="row.comContent"
@@ -115,7 +115,6 @@
         <v-textarea
           label="댓글 수정"
           filled
-          auto-grow
           rows="4"
           row-height="30"
           v-model="row.comContent"
@@ -365,10 +364,10 @@ button {
 
 .commentMiniBox {
   background-color: rgb(169, 212, 244);
-  height: 145px;
+  height: 138px;
   width: 190px;
   float: left;
-  border: 1px solid rgb(169, 212, 244);
+  border: 1px solid white;
 }
 
 .commentMiniBox .commentTitle {

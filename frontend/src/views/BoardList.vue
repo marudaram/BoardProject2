@@ -60,11 +60,21 @@
             :key="idx"
             @click="detail(row.boardNum)"
           >
-            <td>{{ row.boardNum }}</td>
-            <td style="textAlign:center">{{ row.title }}</td>
-            <td>{{ row.id }}</td>
-            <td>{{ $moment(row.regDate).format("YYYY-MM-DD HH:MM") }}</td>
-            <td>{{ row.hit }}</td>
+            <td style="cursor:pointer">{{ row.boardNum }}</td>
+            <td style="textAlign:center; cursor:pointer">
+              {{ row.title
+              }}<span
+                v-if="row.comCount != 0"
+                style="fontWeight:bold; color:gray"
+              >
+                ( {{ row.comCount }} )</span
+              >
+            </td>
+            <td style="cursor:pointer">{{ row.id }}</td>
+            <td style="cursor:pointer">
+              {{ $moment(row.regDate).format("YYYY-MM-DD HH:MM") }}
+            </td>
+            <td style="cursor:pointer">{{ row.hit }}</td>
           </tr>
         </tbody>
       </v-simple-table>
@@ -103,10 +113,12 @@ export default {
   data() {
     return {
       listData: {
+        boardNum: "",
         title: "",
         content: "",
         regDate: "",
-        hit: 0
+        hit: 0,
+        comCount: ""
       },
       isLoading: false,
       comTotal: "",
@@ -132,7 +144,6 @@ export default {
       const { page, amount } = JSON.parse(criteriaObj);
       this.page = page;
       this.amount = amount;
-
       this.getBoardList();
     }
   },
@@ -142,8 +153,6 @@ export default {
       const { page, amount } = JSON.parse(param);
       this.page = page;
       this.amount = amount;
-
-      console.log(this.$route.params.criteriaObj);
     }
     this.getBoardList();
     this.getComTotal;

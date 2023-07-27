@@ -22,11 +22,13 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer comNum;
 
-    @Column
-    private Integer boardNum;
-
     @Column(length = 30)
     private String id;
+
+    // 게시글
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_num")
+    private Board board;
 
     @Column(length = 30)
     private String comWriter;
@@ -38,6 +40,8 @@ public class Comment {
     @CreationTimestamp
     private Date regDate;
 
+    @Column(columnDefinition = "int default 0")
+    private int writtenComment;
 
     //댓글 수정하기
     public void changeComment(String comContent) {

@@ -24,6 +24,12 @@
         ></v-select>
         <v-btn
           variant="tonal"
+          style="backgroundColor:rgb(6, 58, 81); color:white"
+        >
+          삭제
+        </v-btn>
+        <v-btn
+          variant="tonal"
           @click="toBoardWrite"
           class="writeBtn"
           style="backgroundColor:rgb(6, 58, 81); color:white"
@@ -31,10 +37,21 @@
           글 등록
         </v-btn>
       </div>
+      <span>check: {{ checkArr }}</span>
       <LoadingSpinner v-if="isLoading" style="marginRight:50%"></LoadingSpinner>
+
       <v-simple-table style="marginTop:30px" v-else>
         <thead style="backgroundColor:rgb(169, 212, 244)">
           <tr>
+            <td>
+              <input
+                type="checkbox"
+                readonly
+                v-on:click="aaa"
+                v-bind:class="{ active: checkStatus }"
+              />
+            </td>
+
             <th class="text-left no" style="paddingLeft:3%">
               No
             </th>
@@ -55,13 +72,36 @@
 
         <tbody>
           <tr v-for="(row, idx) in myListData" :key="idx">
-            <td @click="detail(row.boardNum)">{{ row.boardNum }}</td>
-            <td @click="detail(row.boardNum)">{{ row.title }}</td>
-            <td @click="detail(row.boardNum)">{{ row.id }}</td>
-            <td @click="detail(row.boardNum)">
+            <td>
+              <input
+                type="checkbox"
+                readonly
+                :value="row.boardNum"
+                v-model="checkArr"
+                name="checks"
+              />
+            </td>
+            <td @click="detail(row.boardNum)" style="cursor:pointer">
+              {{ row.boardNum }}
+            </td>
+            <td @click="detail(row.boardNum)" style="cursor:pointer">
+              {{ row.title
+              }}<span
+                v-if="row.comCount != 0"
+                style="fontWeight:bold; color:gray"
+              >
+                ( {{ row.comCount }} )</span
+              >
+            </td>
+            <td @click="detail(row.boardNum)" style="cursor:pointer">
+              {{ row.id }}
+            </td>
+            <td @click="detail(row.boardNum)" style="cursor:pointer">
               {{ $moment(row.regDate).format("YYYY-MM-DD HH:MM") }}
             </td>
-            <td @click="detail(row.boardNum)">{{ row.hit }}</td>
+            <td @click="detail(row.boardNum)" style="cursor:pointer">
+              {{ row.hit }}
+            </td>
           </tr>
         </tbody>
       </v-simple-table>
@@ -117,7 +157,10 @@ export default {
       //검색 관련
       searchOption: ["CONTENT", "TITLE"], // 검색 옵션
       searchKeyword: "", //검색 키워드
-      searchOptionSelected: "CONTENT" //검색 옵션값 받아오기, 기본값은 본문으로 지정
+      searchOptionSelected: "CONTENT", //검색 옵션값 받아오기, 기본값은 본문으로 지정
+
+      checkArr: [],
+      checkStatus: false
     };
   },
   computed: {
@@ -184,6 +227,13 @@ export default {
         this.totalElements = totalElements;
         this.totalPages = totalPages;
       }
+    },
+    aaa() {
+      const checkBoxes = document.getElementsByName("checks");
+      checkBoxes.forEach(checks => {
+        checks.checked = true;
+        this.checkStatus = true;
+      });
     }
   }
 };

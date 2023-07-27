@@ -19,23 +19,35 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    //댓글 저장
+    /**
+     * @methodName: comSave
+     * @Description: 댓글 저장하기
+     * @param commentRequestDTO
+     */
     @PostMapping("/comSave")
     public @ResponseBody ResponseEntity<CommentResponseDTO> comSave(@RequestBody CommentRequestDTO commentRequestDTO) {
         commentRequestDTO.setRegDate(new Date());
         return new ResponseEntity<>(commentService.comSave(commentRequestDTO), HttpStatus.OK) ;
     }
 
-    //댓글 리스트
+
+    /**
+     * @methodName: myCommentList
+     * @Description: 댓글 목록 가져오기
+     * @param boardNum
+     */
     @GetMapping("/comList/{boardNum}")
     public @ResponseBody ResponseEntity<List<CommentResponseDTO>> myCommentList(@PathVariable("boardNum") Integer boardNum) {
         List<CommentResponseDTO> myCommentList = commentService.getMyComments(boardNum);
-
         return new ResponseEntity<>(myCommentList, HttpStatus.OK);
     }
 
 
-    //댓글 삭제하기
+    /**
+     * @methodName: comDelete
+     * @Description: 댓글 삭제하기
+     * @param comNum
+     */
     @GetMapping("/comDelete")
     public ResponseEntity comDelete(@RequestParam(value = "comNum", required = false) Integer comNum) {
         System.out.println("컴넘?"+comNum);
@@ -43,26 +55,17 @@ public class CommentController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    //댓글 수정하기
+
+    /**
+     * @methodName: comModify
+     * @Description: 댓글 수정하기
+     * @param comNum
+     * @param commentRequestDTO
+     */
     @PutMapping("/comModify/{comNum}")
     public @ResponseBody ResponseEntity<CommentResponseDTO> comModify(@PathVariable("comNum") Integer comNum,
                                                         @RequestBody CommentRequestDTO commentRequestDTO) {
-
         commentRequestDTO.setComNum(comNum);
         return new ResponseEntity<>(commentService.comModify(commentRequestDTO), HttpStatus.OK);
-
     }
-
-    //수정한 댓글 가져오기
-    @GetMapping("/comDetail")
-    public @ResponseBody ResponseEntity<CommentResponseDTO> comDetail(@RequestParam("comNum") Integer comNum) {
-        return new ResponseEntity<>(commentService.comDetail(comNum), HttpStatus.OK);
-    }
-
-    //댓글 총 개수
-//    @PostMapping("/getComTotal/{boardNum}")
-//    public ResponseEntity<Integer> getComTotal(@PathVariable("boardNum") Integer boardNum) {
-//        return new ResponseEntity<>(commentService.getComTotal(boardNum), HttpStatus.OK);
-//    }
-
 }

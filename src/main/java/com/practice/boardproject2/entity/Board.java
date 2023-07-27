@@ -42,22 +42,20 @@ public class Board {
     @Column(columnDefinition = "int default 0")
     private Integer hit;
 
+    // 게시글의 댓글 목록
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board")
+    private List<Comment> commentList = new ArrayList<>();
 
+    //게시글 수정
     public void changeBoard(String title, String content) {
         this.title = title;
         this.content = content;
         this.regDate = new Date();
     }
 
+    //조회수 증가
     public int increaseHit() {
         return this.hit++;
     }
-
-
-    //댓글이랑 join
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "boardNum")
-    private List<Comment> commentList = new ArrayList<>();
-
 
 }

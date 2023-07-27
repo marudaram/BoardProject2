@@ -14,7 +14,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -27,6 +26,7 @@ public class BoardService {
         Board board = boardRepository.save(toEntity(boardRequestDTO));
         return toDto(board);
     }
+
 
     //게시글 리스트 가져오기
     @Transactional
@@ -56,6 +56,7 @@ public class BoardService {
 
     }
 
+
     //게시글 디테일
     @Transactional
     public BoardResponseDTO read(Integer boardNum) {
@@ -63,6 +64,7 @@ public class BoardService {
         board.increaseHit();
         return toDto(board);
     }
+
 
     //게시글 수정하기
     @Transactional
@@ -73,11 +75,13 @@ public class BoardService {
         return toDto(board);
     }
 
+
     //게시글 삭제하기
     @Transactional
     public void delete(Integer boardNum) {
         boardRepository.deleteById(boardNum);
     }
+
 
     //내가 쓴 게시글 가져오기
     @Transactional
@@ -95,13 +99,12 @@ public class BoardService {
             default:
                 spec2 = null;
         }
-
         Page<Board> page = spec2 == null ?
                 boardRepository.findAllById(id, pageRequest) :
                 boardRepository.findAll(spec2, pageRequest);
-
         return new PageImpl<>(page.map(this::toDto).toList(), page.getPageable(), page.getTotalElements());
     }
+
 
     private BoardResponseDTO toDto(Board board) {
         return BoardResponseDTO.builder()
@@ -111,8 +114,10 @@ public class BoardService {
                 .hit(board.getHit())
                 .id(board.getId())
                 .regDate(board.getRegDate())
+                .comCount(board.getCommentList().size())
                 .build();
     }
+
 
     private Board toEntity(BoardRequestDTO dto) {
         return Board.builder()
@@ -123,6 +128,4 @@ public class BoardService {
                 .hit(dto.getHit())
                 .build();
     }
-
-
 }

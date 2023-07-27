@@ -34,6 +34,9 @@
       <v-btn text @click="$refs.form.reset()">
         Clear
       </v-btn>
+      <v-btn color="deep-purple accent-4" text @click="goToSignIn">
+        Sign In
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn
         :disabled="!form"
@@ -92,7 +95,16 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    goToSignIn() {
+      this.$router.push(`/`);
     }
   }
 };
 </script>
+
+<style>
+.mx-auto {
+  margin-top: 180px;
+}
+</style>

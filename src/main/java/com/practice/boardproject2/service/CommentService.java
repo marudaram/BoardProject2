@@ -3,7 +3,9 @@ package com.practice.boardproject2.service;
 import com.practice.boardproject2.dto.BoardResponseDTO;
 import com.practice.boardproject2.dto.CommentRequestDTO;
 import com.practice.boardproject2.dto.CommentResponseDTO;
+import com.practice.boardproject2.entity.Board;
 import com.practice.boardproject2.entity.Comment;
+import com.practice.boardproject2.repository.BoardRepository;
 import com.practice.boardproject2.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
 
+    private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
 
     //댓글 저장하기
@@ -25,18 +28,19 @@ public class CommentService {
         return toDto(comment);
     }
 
+
     //댓글 가져오기
     @Transactional
     public List<CommentResponseDTO> getMyComments(Integer boardNum) {
         List<Comment> commentList = commentRepository.findByBoardNum(boardNum);
         List<CommentResponseDTO> commentResponseDTOList = new ArrayList<>();
-        for(Comment comment : commentList) {
+        for (Comment comment : commentList) {
             CommentResponseDTO commentResponseDTO = CommentResponseDTO.builder()
                     .comNum(comment.getComNum())
                     .comWriter(comment.getComWriter())
                     .comContent(comment.getComContent())
                     .regDate(comment.getRegDate())
-                    .boardNum(comment.getBoardNum())
+                    .boardNum(comment.getBoard().getBoardNum())
                     .id(comment.getId())
                     .build();
             commentResponseDTOList.add(commentResponseDTO);
@@ -51,6 +55,7 @@ public class CommentService {
         commentRepository.comDelete(comNum);
     }
 
+
     //댓글 수정하기
     @Transactional
     public CommentResponseDTO comModify(CommentRequestDTO commentRequestDTO) {
@@ -60,20 +65,6 @@ public class CommentService {
         return toDto(comment);
     }
 
-    //수정한 댓글 가져오기
-    @Transactional
-    public CommentResponseDTO comDetail(Integer comNum) {
-        Comment comment = commentRepository.findById(comNum).orElseThrow(() -> new IllegalArgumentException("없습니다"));
-        return toDto(comment);
-    }
-
-    //댓글 개수 가져오기
-//    @Transactional
-//    public Integer getComTotal(Integer boardNum) {
-//        Integer totalCom = commentRepository.countBy(boardNum);
-//        return totalCom;
-//    }
-
 
     private CommentResponseDTO toDto(Comment comment) {
         return CommentResponseDTO.builder()
@@ -82,20 +73,22 @@ public class CommentService {
                 .comWriter(comment.getComWriter())
                 .comContent(comment.getComContent())
                 .regDate(comment.getRegDate())
-                .boardNum(comment.getBoardNum())
+                .boardNum(comment.getBoard().getBoardNum())
                 .build();
 
     }
 
+
     private Comment toEntity(CommentRequestDTO dto) {
+        Board board = boardRepository.findById(dto.getBoardNum()).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 없습니다."));
         return Comment.builder()
                 .comNum(dto.getComNum())
                 .id(dto.getId())
                 .comWriter(dto.getComWriter())
                 .comContent(dto.getComContent())
                 .regDate(dto.getRegDate())
-                .boardNum(dto.getBoardNum())
+                .board(board)
                 .build();
     }
-
 }

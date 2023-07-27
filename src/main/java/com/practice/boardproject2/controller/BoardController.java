@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Controller
@@ -23,7 +24,11 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
-    //게시글 저장
+    /**
+     * @methodName: save
+     * @Description: 게시글 저장하기
+     * @param boardRequestDTO
+     */
     @PostMapping(value = "/save")
     public @ResponseBody ResponseEntity<BoardResponseDTO> save(@RequestBody BoardRequestDTO boardRequestDTO) {
         Date date = new Date();
@@ -31,7 +36,12 @@ public class BoardController {
         return new ResponseEntity<>(boardService.save(boardRequestDTO), HttpStatus.OK);
     }
 
-    //게시판 리스트 -restcontroller확인
+
+    /**
+     * @methodName: list
+     * @Description: 게시판 목록 가져오기
+     * @param param
+     */
     @GetMapping("/list")
     public @ResponseBody ResponseEntity<Page<BoardResponseDTO>> list(BoardSearchDTO param) {
         Page<BoardResponseDTO> boardList =  boardService.getBoardList(param);
@@ -39,14 +49,24 @@ public class BoardController {
     }
 
 
-    //게시글 디테일
+    /**
+     * @methodName: read
+     * @Description: 게시글 상세보기
+     * @param boardNum
+     */
     @GetMapping(value = "/detail/{boardNum}")
     public @ResponseBody ResponseEntity<BoardResponseDTO> read(@PathVariable("boardNum") Integer boardNum) {
 
         return new ResponseEntity<>(boardService.read(boardNum), HttpStatus.OK);
     }
 
-    //게시글 수정하기
+
+    /**
+     * @methodName: modify
+     * @Description: 게시글 수정하기
+     * @param boardNum
+     * @param boardRequestDTO
+     */
     @PutMapping("/detail/{boardNum}")
     public @ResponseBody ResponseEntity<BoardResponseDTO> modify(@PathVariable("boardNum") Integer boardNum,
                                                    @RequestBody BoardRequestDTO boardRequestDTO) {
@@ -54,20 +74,28 @@ public class BoardController {
         return new ResponseEntity<>(boardService.modify(boardRequestDTO), HttpStatus.OK);
     }
 
-    //게시글 삭제하기
+
+    /**
+     * @methodName: delete
+     * @Description: 게시글 삭제하기
+     * @param boardNum
+     */
     @DeleteMapping(value = "/detail/{boardNum}")
     public ResponseEntity delete(@PathVariable("boardNum") Integer boardNum) {
         boardService.delete(boardNum);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    //내가 쓴 게시글 불러오기
+
+    /**
+     * @methodName: myBoardList
+     * @Description: 내가 쓴 게시글 불러오기
+     * @param id
+     * @param param
+     */
     @GetMapping("/myBoard/{id}")
     public @ResponseBody ResponseEntity<Page<BoardResponseDTO>> myBoardList(@PathVariable("id") String id, BoardSearchDTO param) {
         Page<BoardResponseDTO> myBoardList = boardService.getMyBoardList(id, param);
         return new ResponseEntity<>(myBoardList, HttpStatus.OK);
     }
-
-
-
 }
