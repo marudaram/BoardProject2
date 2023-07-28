@@ -3,6 +3,7 @@ package com.practice.boardproject2.repository.spec;
 import com.practice.boardproject2.entity.Board;
 import org.springframework.data.jpa.domain.Specification;
 
+
 public class BoardSpecification {
 
     //제목으로 검색

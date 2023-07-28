@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Date;
 import java.util.List;
+
 
 @Controller
 @RequestMapping("/comment")
@@ -25,7 +25,7 @@ public class CommentController {
      * @param commentRequestDTO
      */
     @PostMapping("/comSave")
-    public @ResponseBody ResponseEntity<CommentResponseDTO> comSave(@RequestBody CommentRequestDTO commentRequestDTO) {
+    public ResponseEntity<CommentResponseDTO> comSave(@RequestBody CommentRequestDTO commentRequestDTO) {
         commentRequestDTO.setRegDate(new Date());
         return new ResponseEntity<>(commentService.comSave(commentRequestDTO), HttpStatus.OK) ;
     }
@@ -37,7 +37,7 @@ public class CommentController {
      * @param boardNum
      */
     @GetMapping("/comList/{boardNum}")
-    public @ResponseBody ResponseEntity<List<CommentResponseDTO>> myCommentList(@PathVariable("boardNum") Integer boardNum) {
+    public ResponseEntity<List<CommentResponseDTO>> myCommentList(@PathVariable("boardNum") Integer boardNum) {
         List<CommentResponseDTO> myCommentList = commentService.getMyComments(boardNum);
         return new ResponseEntity<>(myCommentList, HttpStatus.OK);
     }
@@ -63,7 +63,7 @@ public class CommentController {
      * @param commentRequestDTO
      */
     @PutMapping("/comModify/{comNum}")
-    public @ResponseBody ResponseEntity<CommentResponseDTO> comModify(@PathVariable("comNum") Integer comNum,
+    public ResponseEntity<CommentResponseDTO> comModify(@PathVariable("comNum") Integer comNum,
                                                         @RequestBody CommentRequestDTO commentRequestDTO) {
         commentRequestDTO.setComNum(comNum);
         return new ResponseEntity<>(commentService.comModify(commentRequestDTO), HttpStatus.OK);

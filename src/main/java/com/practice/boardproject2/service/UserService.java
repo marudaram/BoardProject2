@@ -1,5 +1,4 @@
 package com.practice.boardproject2.service;
-
 import com.practice.boardproject2.dto.UserRequestDTO;
 import com.practice.boardproject2.dto.UserResponseDTO;
 import com.practice.boardproject2.entity.User;
@@ -8,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
 
 @Service
@@ -21,8 +19,6 @@ public class UserService {
     @Transactional
     public Boolean logIn(UserRequestDTO userRequestDTO) {
 
-
-
         //디비에서 사용자 정보 가져오기
         Optional<User> findId = userRepository.findByIdAndPassword(userRequestDTO.getId(), userRequestDTO.getPassword());
 
@@ -34,8 +30,6 @@ public class UserService {
         } else {
             return true;
         }
-
-
     }
 
 
@@ -55,6 +49,7 @@ public class UserService {
                 .build();
     }
 
+
     private User toEntity(UserRequestDTO dto) {
         return User.builder()
                 .id(dto.getId())
@@ -62,8 +57,4 @@ public class UserService {
                 .name(dto.getName())
                 .build();
     }
-
-
-
-
 }

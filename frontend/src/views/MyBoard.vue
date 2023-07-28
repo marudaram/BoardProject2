@@ -162,6 +162,7 @@ export default {
     this.getMyBoardList();
   },
   methods: {
+    //게시글 상세화면 이동 메서드
     detail(idx) {
       this.$router.push({
         name: "boardDetail",
@@ -170,6 +171,7 @@ export default {
         }
       });
     },
+    //페이지 정보
     routePage({ page = 1, amount = this.amount }) {
       this.$router.push({
         name: "myListParam",
@@ -178,9 +180,11 @@ export default {
         }
       });
     },
+    //글쓰기 화면으로 이동하는 메서드
     toBoardWrite() {
       this.$router.push("/boardWrite");
     },
+    //내가 쓴 글 불러오는 메서드
     async getMyBoardList() {
       this.isLoading = true;
       const id = JSON.parse(sessionStorage.getItem("sessionId"));
@@ -192,8 +196,10 @@ export default {
           searchOption: this.searchOptionSelected
         }
       });
-
-      if (status == 200) {
+      if (status != 200) {
+        console.error();
+        return;
+      } else {
         this.isLoading = false;
         const {
           content: list,

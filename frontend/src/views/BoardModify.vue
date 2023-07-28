@@ -1,13 +1,14 @@
 <template>
   <v-container>
     <v-col class="wrapBox">
+      <!-- 제목 -->
       <input
         type="text"
         placeholder="제목"
         class="titleArea"
         v-model="boardChangeData.title"
       />
-
+      <!-- 에디터 -->
       <div class="example">
         <quill-editor
           class="editor"
@@ -16,19 +17,24 @@
           :disabled="false"
           :value="content"
           :options="editorOption"
-          @change="onEditorChange"
-          @blur="onEditorBlur($event)"
-          @focus="onEditorFocus($event)"
-          @ready="onEditorReady($event)"
           v-model="boardChangeData.content"
         />
-        <div class="output ql-snow"></div>
       </div>
     </v-col>
 
-    <v-col>
-      <v-btn variant="tonal"> 목록으로 </v-btn>&nbsp;
-      <v-btn variant="tonal" @click="modifyBoard">
+    <v-col style="marginBottom:150px">
+      <v-btn
+        variant="tonal"
+        @click="toBoardList"
+        style="backgroundColor:rgb(6, 58, 81); color:white"
+      >
+        목록으로 </v-btn
+      >&nbsp;
+      <v-btn
+        variant="tonal"
+        @click="modifyBoard"
+        style="backgroundColor:rgb(6, 58, 81); color:white"
+      >
         수정
       </v-btn>
     </v-col>
@@ -48,7 +54,6 @@ import "highlight.js/styles/tomorrow.css";
 // import theme style
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
-// import { reactive } from "vue";
 
 export default {
   name: "quill-example-snow",
@@ -93,7 +98,7 @@ export default {
       content: ""
     };
   },
-  created() {
+  mounted() {
     const boardNum = this.$route.params.boardNum;
     this.$axios
       .get(`board/detail/${boardNum}`)
@@ -106,40 +111,32 @@ export default {
       });
   },
   methods: {
-    onEditorChange: debounce(function(value) {
-      this.content = value.html;
-    }, 466),
-    onEditorBlur(editor) {
-      console.log("editor blur!", editor);
-    },
-    onEditorFocus(editor) {
-      console.log("editor focus!", editor);
-    },
-    onEditorReady(editor) {
-      console.log("editor ready!", editor);
-    },
-    modifyBoard() {
-      this.$axios
-        .put(`board/detail/${this.boardChangeData.boardNum}`, {
+    async modifyBoard() {
+      const { status, data } = await this.$axios.put(
+        `board/detail/${this.boardChangeData.boardNum}`,
+        {
           title: this.boardChangeData.title,
           content: this.boardChangeData.content,
           id: this.boardChangeData.id
-        })
-        .then(res => {
-          this.boardChangeData = res.data;
-          console.log(res.data);
-          this.$router.push({
-            name: `boardDetail`,
-            params: {
-              boardNum: this.$route.params.boardNum
-            }
-          });
-          if (
-            this.$route.path !== `/boardDetail/${this.$route.params.boardNum}`
-          ) {
-            this.$router.push(`/boardDetail/${this.$route.params.boardNum}`);
+        }
+      );
+      if (status != 200) {
+        console.error();
+        return;
+      } else {
+        this.boardChangeData = data;
+        this.$router.push({
+          name: `boardDetail`,
+          params: {
+            boardNum: this.$route.params.boardNum
           }
         });
+        if (
+          this.$route.path !== `/boardDetail/${this.$route.params.boardNum}`
+        ) {
+          this.$router.push(`/boardDetail/${this.$route.params.boardNum}`);
+        }
+      }
     },
     toBoardList() {
       this.$router.push({ path: `/boardList` });
@@ -147,3 +144,17 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.titleArea {
+  border: 2px solid lightgrey;
+  height: 40px;
+  font-size: 20px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+button {
+  margin-top: 100px;
+}
+</style>

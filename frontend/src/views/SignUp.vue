@@ -80,21 +80,18 @@ export default {
 
   methods: {
     async join() {
-      console.log("join 실행");
-      await this.$axios
-        .post(`/user/join`, {
-          id: this.user.id,
-          password: this.user.password,
-          name: this.user.name
-        })
-        .then(res => {
-          this.$router.push(`/`);
-          console.log(res.data);
-          alert("회원가입이 성공적으로 되었습니다!");
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      const { status } = await this.$axios.post(`/user/join`, {
+        id: this.user.id,
+        password: this.user.password,
+        name: this.user.name
+      });
+      if (status != 200) {
+        console.error();
+        return;
+      } else {
+        this.$router.push(`/`);
+        alert("회원가입이 성공적으로 되었습니다!");
+      }
     },
     goToSignIn() {
       this.$router.push(`/`);
@@ -102,8 +99,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.mx-auto {
-}
-</style>

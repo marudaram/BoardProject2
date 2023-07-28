@@ -16,15 +16,24 @@
           ref="myTextEditor"
           :disabled="false"
           :options="editorOption"
-          @change="onEditorChange"
           v-model="boardDetailData.content"
         />
       </div>
     </v-col>
-
-    <v-col>
-      <v-btn variant="tonal" @click="toBoardList"> 목록으로 </v-btn>&nbsp;
-      <v-btn variant="tonal" @click="onSubmit">
+    <!-- 버튼 -->
+    <v-col style="marginBottom:150px">
+      <v-btn
+        variant="tonal"
+        @click="toBoardList"
+        style="backgroundColor:rgb(6, 58, 81); color:white"
+      >
+        목록으로 </v-btn
+      >&nbsp;
+      <v-btn
+        variant="tonal"
+        @click="onSubmit"
+        style="backgroundColor:rgb(6, 58, 81); color:white"
+      >
         글 등록
       </v-btn>
     </v-col>
@@ -84,11 +93,15 @@ export default {
       }
     };
   },
+  computed: {
+    editor() {
+      return this.$refs.myTextEditor.quill;
+    },
+    contentCode() {
+      return hljs.highlightAuto(this.content).value;
+    }
+  },
   methods: {
-    onEditorChange: debounce(function(value) {
-      this.content = value.html;
-    }, 466),
-
     // 글 등록 메서드
     async onSubmit() {
       if (
@@ -116,14 +129,6 @@ export default {
     // 게시판 화면으로 이동하는 메서드
     toBoardList() {
       this.$router.push({ path: "/boardList" });
-    }
-  },
-  computed: {
-    editor() {
-      return this.$refs.myTextEditor.quill;
-    },
-    contentCode() {
-      return hljs.highlightAuto(this.content).value;
     }
   }
 };

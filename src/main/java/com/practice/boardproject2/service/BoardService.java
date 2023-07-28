@@ -1,4 +1,5 @@
 package com.practice.boardproject2.service;
+
 import com.practice.boardproject2.dto.BoardRequestDTO;
 import com.practice.boardproject2.dto.BoardResponseDTO;
 import com.practice.boardproject2.dto.BoardSearchDTO;
@@ -15,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service

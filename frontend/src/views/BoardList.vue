@@ -8,6 +8,7 @@
           single-line
           style="float:left; marginRight:10px"
           v-model="searchKeyword"
+          @keydown.enter="getBoardList"
         ></v-text-field>
         <v-btn
           variant="tonal"
@@ -31,6 +32,7 @@
           글 등록
         </v-btn>
       </div>
+      <!-- 로딩화면 -->
       <LoadingSpinner v-if="isLoading"></LoadingSpinner>
       <!-- 테이블 타이틀부분 -->
       <v-simple-table v-else style="marginTop:30px; position:relative">
@@ -155,12 +157,13 @@ export default {
       this.amount = amount;
     }
     this.getBoardList();
-    this.getComTotal;
   },
   methods: {
+    //글쓰기 페이지로 이동하는 메서드
     toBoardWrite() {
       this.$router.push({ path: "/boardWrite" });
     },
+    //게시글 리스트 가져오는 메서드
     async getBoardList() {
       this.isLoading = true;
       const { status, data } = await this.$axios.get("/board/list", {
@@ -171,8 +174,10 @@ export default {
           searchOption: this.searchOptionSelected
         }
       });
-
-      if (status == 200) {
+      if (status != 200) {
+        console.error();
+        return;
+      } else {
         this.isLoading = false;
         const {
           content: list,
@@ -188,6 +193,7 @@ export default {
         this.totalPages = totalPages;
       }
     },
+    //게시글 상세페이지 이동 메서드
     detail(idx) {
       this.$router.push({
         name: "boardDetail",
@@ -202,13 +208,6 @@ export default {
         params: {
           criteriaObj: JSON.stringify({ page, amount })
         }
-      });
-    },
-    getComTotal() {
-      const boardNum = this.listData.boardNum;
-      this.$axios.post(`/comment/${boardNum}`).then(res => {
-        this.comTotal = res.data;
-        console.log(res.data);
       });
     }
   }
@@ -238,7 +237,6 @@ export default {
 
 .selectBox {
   border: 1px solid lightgrey;
-
   float: right;
   text-align: center;
   margin-top: 10px;

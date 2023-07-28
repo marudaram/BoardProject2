@@ -1,7 +1,6 @@
 package com.practice.boardproject2.dto;
 
 import lombok.*;
-
 import java.util.Date;
 
 @Builder

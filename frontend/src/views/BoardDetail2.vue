@@ -74,9 +74,9 @@
 
         <v-textarea
           filled
-          hide-details
           label="댓글 작성"
           rows="4"
+          row-height="30"
           v-model="commentDetailData.comContent"
         ></v-textarea>
 
@@ -91,81 +91,8 @@
       </v-row>
 
       <!-- 쓴 댓글 나오는 부분 -->
-      <v-row
-        cols="auto"
-        sm="12"
-        v-for="(row, index) in commentDetailData"
-        :key="index"
-      >
-        <!-- 댓쓴이 -->
-        <div class="commentMiniBox ">
-          <p class="commentTitle">
-            {{ row.comWriter }}
-          </p>
-        </div>
-        <!-- 댓글내용 -->
-        <div
-          style="paddingTop:30px; paddingLeft:20px; white-space:pre; overflow:auto;"
-          class="writtenComment"
-          v-html="row.comContent"
-          v-if="row.readMode"
-        ></div>
-        <!-- 수정버튼 누른 후 수정할 때 -->
-        <v-textarea
-          label="댓글 수정"
-          filled
-          rows="4"
-          row-height="30"
-          v-model="row.comContent"
-          v-else
-        >
-        </v-textarea>
-        <!-- 댓글 읽기 모드일 때 -->
-        <div class="commentInfoBox">
-          <v-input
-            error-count="3"
-            :error-messages="$moment(row.regDate).format('YYYY-MM-DD HH:MM')"
-            error
-            disabled
-            class="writingInfo"
-            v-if="row.readMode"
-          >
-          </v-input>
-          <!-- 수정하기 모드일 때 버튼 -->
-          <div class="btnBox1">
-            <button
-              v-show="!row.readMode"
-              class="modiBtn1"
-              @click="cancelBtn(row)"
-            >
-              취소
-            </button>
+      <Test v-for="(row, index) in commentDetailData" :key="index" :row="row" />
 
-            <button
-              v-show="!row.readMode"
-              class="modiBtn2"
-              @click="comModifyBtn(row)"
-            >
-              수정하기
-            </button>
-          </div>
-          <!-- 읽기 모드일 때 버튼 -->
-          <div class="btnBox2">
-            <button
-              @click="comDeleteBtn(row.comNum)"
-              v-show="row.readMode && row.comWriter === sessionId"
-            >
-              삭제
-            </button>
-            <button
-              @click="wantToModifyBtn(row)"
-              v-show="row.readMode && row.comWriter === sessionId"
-            >
-              수정
-            </button>
-          </div>
-        </div>
-      </v-row>
       <template> </template>
     </div>
   </div>
@@ -360,23 +287,21 @@ button {
 
 .commentMiniBox {
   background-color: rgb(169, 212, 244);
-  display: flex;
-  align-items: center;
-  min-height: 138px;
+  height: 138px;
   width: 190px;
   float: left;
   border: 1px solid white;
 }
 
 .commentMiniBox .commentTitle {
+  text-align: center;
+  margin-top: 30%;
   color: white;
-  margin: 0 auto;
 }
 
 .writtenComment {
   border: 1px solid lightgray;
   width: 83.9%;
-  padding-bottom: 20px;
 }
 
 .commentInfoBox {

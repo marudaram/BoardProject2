@@ -3,8 +3,6 @@ package com.practice.boardproject2.controller;
 import com.practice.boardproject2.dto.BoardRequestDTO;
 import com.practice.boardproject2.dto.BoardResponseDTO;
 import com.practice.boardproject2.dto.BoardSearchDTO;
-import com.practice.boardproject2.dto.CommentResponseDTO;
-import com.practice.boardproject2.pagination.Criteria;
 import com.practice.boardproject2.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,9 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Date;
-import java.util.List;
 
 
 @Controller
@@ -30,7 +26,7 @@ public class BoardController {
      * @param boardRequestDTO
      */
     @PostMapping(value = "/save")
-    public @ResponseBody ResponseEntity<BoardResponseDTO> save(@RequestBody BoardRequestDTO boardRequestDTO) {
+    public ResponseEntity<BoardResponseDTO> save(@RequestBody BoardRequestDTO boardRequestDTO) {
         Date date = new Date();
         boardRequestDTO.setRegDate(date);
         return new ResponseEntity<>(boardService.save(boardRequestDTO), HttpStatus.OK);
@@ -43,7 +39,7 @@ public class BoardController {
      * @param param
      */
     @GetMapping("/list")
-    public @ResponseBody ResponseEntity<Page<BoardResponseDTO>> list(BoardSearchDTO param) {
+    public ResponseEntity<Page<BoardResponseDTO>> list(BoardSearchDTO param) {
         Page<BoardResponseDTO> boardList =  boardService.getBoardList(param);
         return new ResponseEntity<>(boardList, HttpStatus.OK);
     }
@@ -55,7 +51,7 @@ public class BoardController {
      * @param boardNum
      */
     @GetMapping(value = "/detail/{boardNum}")
-    public @ResponseBody ResponseEntity<BoardResponseDTO> read(@PathVariable("boardNum") Integer boardNum) {
+    public ResponseEntity<BoardResponseDTO> read(@PathVariable("boardNum") Integer boardNum) {
 
         return new ResponseEntity<>(boardService.read(boardNum), HttpStatus.OK);
     }
@@ -68,7 +64,7 @@ public class BoardController {
      * @param boardRequestDTO
      */
     @PutMapping("/detail/{boardNum}")
-    public @ResponseBody ResponseEntity<BoardResponseDTO> modify(@PathVariable("boardNum") Integer boardNum,
+    public ResponseEntity<BoardResponseDTO> modify(@PathVariable("boardNum") Integer boardNum,
                                                    @RequestBody BoardRequestDTO boardRequestDTO) {
         boardRequestDTO.setBoardNum(boardNum);
         return new ResponseEntity<>(boardService.modify(boardRequestDTO), HttpStatus.OK);
@@ -94,7 +90,7 @@ public class BoardController {
      * @param param
      */
     @GetMapping("/myBoard/{id}")
-    public @ResponseBody ResponseEntity<Page<BoardResponseDTO>> myBoardList(@PathVariable("id") String id, BoardSearchDTO param) {
+    public ResponseEntity<Page<BoardResponseDTO>> myBoardList(@PathVariable("id") String id, BoardSearchDTO param) {
         Page<BoardResponseDTO> myBoardList = boardService.getMyBoardList(id, param);
         return new ResponseEntity<>(myBoardList, HttpStatus.OK);
     }

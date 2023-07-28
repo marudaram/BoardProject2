@@ -49,6 +49,7 @@ export default defineComponent({
     };
   },
   methods: {
+    //로그인 메서드
     async logIn() {
       console.log("로그인버튼클릭");
       await this.$axios
@@ -71,6 +72,7 @@ export default defineComponent({
         })
         .finally(() => console.log("로그인 시도"));
     },
+    //회원가입 화면으로 이동하는 메서드
     goToSignUp() {
       this.$router.push(`/SignUp`);
     }

@@ -3,7 +3,7 @@
     <v-app-bar class="px-3" color="light-gray" flat density="compact">
       <v-avatar color="grey-darken-1" size="32"></v-avatar>
       <v-spacer></v-spacer>
-
+      <!-- 메뉴바 -->
       <v-tabs centered color="grey-darken-2" class="header">
         <v-tab @click="toBoardList">
           <p>Board List</p>
@@ -43,6 +43,9 @@ export default {
     id: JSON.parse(sessionStorage.getItem("sessionId"))
   }),
   methods: {
+    //메뉴바 클릭시 해당하는 화면으로 이동하는 메서드
+    //세션 스토리지가 비어있을 경우 alert
+    //현재 페이지가 게시판 리스트가 아니라면 해당 페이지로 이동 / 현재 페이지라면 reload
     toBoardList() {
       if (JSON.parse(sessionStorage.getItem("sessionId")) == null) {
         alert("로그인 먼저 해주세요.");
@@ -81,6 +84,7 @@ export default {
         }
       }
     },
+    //저장돼있는 세션을 지우고 로그인 화면으로 이동
     logOut() {
       sessionStorage.clear();
       this.$router.push(`/`);
