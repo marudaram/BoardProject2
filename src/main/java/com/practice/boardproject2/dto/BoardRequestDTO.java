@@ -16,4 +16,5 @@ public class BoardRequestDTO {
     private String content;
     private Date regDate;
     private Integer hit;
+    private Integer comCount;
 }

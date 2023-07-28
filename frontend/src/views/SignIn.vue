@@ -13,6 +13,7 @@
         counter
         @click:append="show1 = !show1"
         v-model="userInfo.password"
+        @keyup.enter="logIn"
       ></v-text-field>
     </v-card-text>
     <v-card-actions>
@@ -79,6 +80,6 @@ export default defineComponent({
 
 <style>
 .mx-auto {
-  margin: 0 auto;
+  margin-bottom: 120px;
 }
 </style>

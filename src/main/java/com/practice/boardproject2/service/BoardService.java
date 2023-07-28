@@ -3,7 +3,9 @@ import com.practice.boardproject2.dto.BoardRequestDTO;
 import com.practice.boardproject2.dto.BoardResponseDTO;
 import com.practice.boardproject2.dto.BoardSearchDTO;
 import com.practice.boardproject2.entity.Board;
+import com.practice.boardproject2.entity.Comment;
 import com.practice.boardproject2.repository.BoardRepository;
+import com.practice.boardproject2.repository.CommentRepository;
 import com.practice.boardproject2.repository.spec.BoardSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,10 +16,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
 
+    private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
 
     //게시글 저장하기
@@ -120,12 +125,14 @@ public class BoardService {
 
 
     private Board toEntity(BoardRequestDTO dto) {
+        List<Comment> comment = commentRepository.findByBoardNum(dto.getBoardNum());
         return Board.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .regDate(dto.getRegDate())
                 .hit(dto.getHit())
+                .commentList(comment)
                 .build();
     }
 }

@@ -2,7 +2,7 @@
   <v-card class="mx-auto" style="max-width: 500px;">
     <v-form ref="form" v-model="form" class="pa-4 pt-6">
       <div>
-        <p>SignUp</p>
+        <p style="fontSize:20px; color:black; marginBottom:40px">SignUp</p>
       </div>
       <v-text-field
         v-model="user.id"
@@ -105,6 +105,5 @@ export default {
 
 <style>
 .mx-auto {
-  margin-top: 180px;
 }
 </style>
